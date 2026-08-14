@@ -1,0 +1,15 @@
+{
+  "network-security-config": {
+    "domain-config": [
+      {
+        "cleartextTraffic": true,
+        "domains": [
+          {
+            "include-subdomains": true,
+            "name": "bkjw.chd.edu.cn"
+          }
+        ]
+      }
+    ]
+  }
+}

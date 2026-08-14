@@ -1,0 +1,14 @@
+curl --url ^"http://bkjw.chd.edu.cn/eams/courseTableForStd^!courseTable.action^" ^
+  -H ^"Accept: */*^" ^
+  -H ^"Accept-Language: zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6^" ^
+  -H ^"Cache-Control: no-cache^" ^
+  -H ^"Content-Type: application/x-www-form-urlencoded; charset=UTF-8^" ^
+  -b ^"semester.id=***; JSESSIONID=********************************; _ga=GA1.1.1018543619.1783437568; _ga_Q68YBYTEGJ=GS2.1.s1783437568^$o1^$g1^$t1783438448^$j43^$l0^$h0; SERVERNAME=c5^" ^
+  -H ^"Origin: http://bkjw.chd.edu.cn^" ^
+  -H ^"Pragma: no-cache^" ^
+  -H ^"Proxy-Connection: keep-alive^" ^
+  -H ^"Referer: http://bkjw.chd.edu.cn/eams/courseTableForStd.action^" ^
+  -H ^"User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36 Edg/151.0.0.0^" ^
+  -H ^"X-Requested-With: XMLHttpRequest^" ^
+  --data-raw ^"ignoreHead=1^&setting.kind=std^&startWeek=^&semester.id=262^&ids=206271^" ^
+  --insecure

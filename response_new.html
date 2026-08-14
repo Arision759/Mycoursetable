@@ -1,0 +1,1421 @@
+
+ 
+<script language="JavaScript" type="text/JavaScript" src="/eams/static/scripts/course/TaskActivity.js?v3.21"></script>
+<script language="JavaScript">
+	function fillTable(table,weeks,units,tableIndex){
+   	   for(var i=0;i<weeks;i++){
+	 	    for(var j=0;j<units-1;j++){
+	 	        var index =units*i+j;
+	 	        var preTd=jQuery("#TD"+index+"_"+tableIndex);
+	 	        var nextTd=jQuery("#TD"+(index+1)+"_"+tableIndex);
+	 	        while(table.marshalContents[index]!=null&&table.marshalContents[index+1]!=null&&table.marshalContents[index]==table.marshalContents[index+1]){
+	 	            nextTd.remove();
+	 	            var spanNumber = 1;
+	 	            if(preTd.prop("rowSpan")) spanNumber = new Number(preTd.prop("rowSpan"))
+	 	            spanNumber++;
+	 	            preTd.prop("rowSpan",spanNumber);
+	 	            j++;
+	 	            if(j>=units-1){
+	 	                break;
+	 	            }
+	 	            index=index+1;
+	 	            nextTd=jQuery("#TD"+(index+1)+"_"+tableIndex);
+	 	        }
+	 	    }
+ 	    }
+ 	    
+ 	   		for(var k = 0; k < table.unitCounts; k++){
+			var td=document.getElementById("TD" + k + "_" + tableIndex);
+			if(td != null && table.marshalContents[k] != null) { 
+				td.innerHTML = table.marshalContents[k];
+				td.style.backgroundColor="#94aef3";
+				td.className = "infoTitle";
+				
+				// 查找冲突 table.activities是什么，可以查看TaskActivity.js和courseTableContent_script.ftl
+				var activitiesInCell = table.activities[k];
+				if(detectCollisionInCell(activitiesInCell)) {
+					td.style.backgroundColor="red";
+				}
+				td.className="infoTitle";
+				td.title=table.marshalContents[k].replace(/<br>/g,";");
+			}
+		}
+   	}
+function detectCollisionInCell(activitiesInCell) {
+	if(activitiesInCell.length <=1)
+		return false;
+	//单元格的课程集合[courseId(seqNo)->true]
+	var cellCourseIds=new Object();
+	var mergedValidWeeks = activitiesInCell[0].vaildWeeks.split("");
+	//登记第一个课程
+	cellCourseIds[ activitiesInCell[0].courseName]=true;
+	for(var z = 1; z < activitiesInCell.length; z++) {		
+		var detectCollision = false;
+		var tValidWeeks = activitiesInCell[z].vaildWeeks.split("");
+		if(mergedValidWeeks.length != tValidWeeks.length) {
+			alert('mergedValidWeeks.length != tValidWeeks.length');
+			return;
+		}
+		for(var x = 0; x < mergedValidWeeks.length; x++) {	//53代表53周
+			var m = new Number(mergedValidWeeks[x]);
+			var t = new Number(tValidWeeks[x]);
+			if(m + t <= 1) {
+				mergedValidWeeks[x] = m + t;
+			}
+			else {
+				//如果已经是登记过的，则不算冲突
+			    if(!cellCourseIds[activitiesInCell[z].courseName]){
+  					return true;	//发现冲突
+  				}
+  			}
+  		}
+  		//登记该课程
+  		cellCourseIds[activitiesInCell[z].courseName]=true;
+	}
+	return false;
+}
+</script>
+   		<pre>课表格式说明：教师姓名 课程名称(序号) (第n周-第m周,教室)</pre>
+		<table width="100%" id="manualArrangeCourseTable" align="center" class="gridtable"  style="text-align:center">
+			<thead>
+			<tr>
+		    	<th style="background-color:#DEEDF7;" height="10px" width="80px">节次/周次</td>
+		    	<th style="background-color:#DEEDF7;">
+		        	<font size="2px">星期一</font>
+				</th>
+		    	<th style="background-color:#DEEDF7;">
+		        	<font size="2px">星期二</font>
+				</th>
+		    	<th style="background-color:#DEEDF7;">
+		        	<font size="2px">星期三</font>
+				</th>
+		    	<th style="background-color:#DEEDF7;">
+		        	<font size="2px">星期四</font>
+				</th>
+		    	<th style="background-color:#DEEDF7;">
+		        	<font size="2px">星期五</font>
+				</th>
+		    	<th style="background-color:#DEEDF7;">
+		        	<font size="2px">星期六</font>
+				</th>
+		    	<th style="background-color:#DEEDF7;">
+		        	<font size="2px">星期日</font>
+				</th>
+			</tr>
+			</thead>
+			<tr>
+			    <td style="background-color:yellow">
+		    		<font size="2px"> 1</font>
+				</td>
+		   		<td id="TD0_0"  style="backGround-Color:#ffffff;font-size:12px"></td>
+		   		<td id="TD11_0"  style="backGround-Color:#ffffff;font-size:12px"></td>
+		   		<td id="TD22_0"  style="backGround-Color:#ffffff;font-size:12px"></td>
+		   		<td id="TD33_0"  style="backGround-Color:#ffffff;font-size:12px"></td>
+		   		<td id="TD44_0"  style="backGround-Color:#ffffff;font-size:12px"></td>
+		   		<td id="TD55_0"  style="backGround-Color:#ffffff;font-size:12px"></td>
+		   		<td id="TD66_0"  style="backGround-Color:#ffffff;font-size:12px"></td>
+			</tr>
+			<tr>
+			    <td style="background-color:yellow">
+		    		<font size="2px"> 2</font>
+				</td>
+		   		<td id="TD1_0"  style="backGround-Color:#ffffff;font-size:12px"></td>
+		   		<td id="TD12_0"  style="backGround-Color:#ffffff;font-size:12px"></td>
+		   		<td id="TD23_0"  style="backGround-Color:#ffffff;font-size:12px"></td>
+		   		<td id="TD34_0"  style="backGround-Color:#ffffff;font-size:12px"></td>
+		   		<td id="TD45_0"  style="backGround-Color:#ffffff;font-size:12px"></td>
+		   		<td id="TD56_0"  style="backGround-Color:#ffffff;font-size:12px"></td>
+		   		<td id="TD67_0"  style="backGround-Color:#ffffff;font-size:12px"></td>
+			</tr>
+			<tr>
+			    <td style="background-color:yellow">
+		    		<font size="2px"> 3</font>
+				</td>
+		   		<td id="TD2_0"  style="backGround-Color:#ffffff;font-size:12px"></td>
+		   		<td id="TD13_0"  style="backGround-Color:#ffffff;font-size:12px"></td>
+		   		<td id="TD24_0"  style="backGround-Color:#ffffff;font-size:12px"></td>
+		   		<td id="TD35_0"  style="backGround-Color:#ffffff;font-size:12px"></td>
+		   		<td id="TD46_0"  style="backGround-Color:#ffffff;font-size:12px"></td>
+		   		<td id="TD57_0"  style="backGround-Color:#ffffff;font-size:12px"></td>
+		   		<td id="TD68_0"  style="backGround-Color:#ffffff;font-size:12px"></td>
+			</tr>
+			<tr>
+			    <td style="background-color:yellow">
+		    		<font size="2px"> 4</font>
+				</td>
+		   		<td id="TD3_0"  style="backGround-Color:#ffffff;font-size:12px"></td>
+		   		<td id="TD14_0"  style="backGround-Color:#ffffff;font-size:12px"></td>
+		   		<td id="TD25_0"  style="backGround-Color:#ffffff;font-size:12px"></td>
+		   		<td id="TD36_0"  style="backGround-Color:#ffffff;font-size:12px"></td>
+		   		<td id="TD47_0"  style="backGround-Color:#ffffff;font-size:12px"></td>
+		   		<td id="TD58_0"  style="backGround-Color:#ffffff;font-size:12px"></td>
+		   		<td id="TD69_0"  style="backGround-Color:#ffffff;font-size:12px"></td>
+			</tr>
+			<tr>
+			    <td style="background-color:green">
+		    		<font size="2px"> 5</font>
+				</td>
+		   		<td id="TD4_0"  style="backGround-Color:#ffffff;font-size:12px"></td>
+		   		<td id="TD15_0"  style="backGround-Color:#ffffff;font-size:12px"></td>
+		   		<td id="TD26_0"  style="backGround-Color:#ffffff;font-size:12px"></td>
+		   		<td id="TD37_0"  style="backGround-Color:#ffffff;font-size:12px"></td>
+		   		<td id="TD48_0"  style="backGround-Color:#ffffff;font-size:12px"></td>
+		   		<td id="TD59_0"  style="backGround-Color:#ffffff;font-size:12px"></td>
+		   		<td id="TD70_0"  style="backGround-Color:#ffffff;font-size:12px"></td>
+			</tr>
+			<tr>
+			    <td style="background-color:green">
+		    		<font size="2px"> 6</font>
+				</td>
+		   		<td id="TD5_0"  style="backGround-Color:#ffffff;font-size:12px"></td>
+		   		<td id="TD16_0"  style="backGround-Color:#ffffff;font-size:12px"></td>
+		   		<td id="TD27_0"  style="backGround-Color:#ffffff;font-size:12px"></td>
+		   		<td id="TD38_0"  style="backGround-Color:#ffffff;font-size:12px"></td>
+		   		<td id="TD49_0"  style="backGround-Color:#ffffff;font-size:12px"></td>
+		   		<td id="TD60_0"  style="backGround-Color:#ffffff;font-size:12px"></td>
+		   		<td id="TD71_0"  style="backGround-Color:#ffffff;font-size:12px"></td>
+			</tr>
+			<tr>
+			    <td style="background-color:green">
+		    		<font size="2px"> 7</font>
+				</td>
+		   		<td id="TD6_0"  style="backGround-Color:#ffffff;font-size:12px"></td>
+		   		<td id="TD17_0"  style="backGround-Color:#ffffff;font-size:12px"></td>
+		   		<td id="TD28_0"  style="backGround-Color:#ffffff;font-size:12px"></td>
+		   		<td id="TD39_0"  style="backGround-Color:#ffffff;font-size:12px"></td>
+		   		<td id="TD50_0"  style="backGround-Color:#ffffff;font-size:12px"></td>
+		   		<td id="TD61_0"  style="backGround-Color:#ffffff;font-size:12px"></td>
+		   		<td id="TD72_0"  style="backGround-Color:#ffffff;font-size:12px"></td>
+			</tr>
+			<tr>
+			    <td style="background-color:green">
+		    		<font size="2px"> 8</font>
+				</td>
+		   		<td id="TD7_0"  style="backGround-Color:#ffffff;font-size:12px"></td>
+		   		<td id="TD18_0"  style="backGround-Color:#ffffff;font-size:12px"></td>
+		   		<td id="TD29_0"  style="backGround-Color:#ffffff;font-size:12px"></td>
+		   		<td id="TD40_0"  style="backGround-Color:#ffffff;font-size:12px"></td>
+		   		<td id="TD51_0"  style="backGround-Color:#ffffff;font-size:12px"></td>
+		   		<td id="TD62_0"  style="backGround-Color:#ffffff;font-size:12px"></td>
+		   		<td id="TD73_0"  style="backGround-Color:#ffffff;font-size:12px"></td>
+			</tr>
+			<tr>
+			    <td style="background-color:pink">
+		    		<font size="2px"> 9</font>
+				</td>
+		   		<td id="TD8_0"  style="backGround-Color:#ffffff;font-size:12px"></td>
+		   		<td id="TD19_0"  style="backGround-Color:#ffffff;font-size:12px"></td>
+		   		<td id="TD30_0"  style="backGround-Color:#ffffff;font-size:12px"></td>
+		   		<td id="TD41_0"  style="backGround-Color:#ffffff;font-size:12px"></td>
+		   		<td id="TD52_0"  style="backGround-Color:#ffffff;font-size:12px"></td>
+		   		<td id="TD63_0"  style="backGround-Color:#ffffff;font-size:12px"></td>
+		   		<td id="TD74_0"  style="backGround-Color:#ffffff;font-size:12px"></td>
+			</tr>
+			<tr>
+			    <td style="background-color:pink">
+		    		<font size="2px"> 10</font>
+				</td>
+		   		<td id="TD9_0"  style="backGround-Color:#ffffff;font-size:12px"></td>
+		   		<td id="TD20_0"  style="backGround-Color:#ffffff;font-size:12px"></td>
+		   		<td id="TD31_0"  style="backGround-Color:#ffffff;font-size:12px"></td>
+		   		<td id="TD42_0"  style="backGround-Color:#ffffff;font-size:12px"></td>
+		   		<td id="TD53_0"  style="backGround-Color:#ffffff;font-size:12px"></td>
+		   		<td id="TD64_0"  style="backGround-Color:#ffffff;font-size:12px"></td>
+		   		<td id="TD75_0"  style="backGround-Color:#ffffff;font-size:12px"></td>
+			</tr>
+			<tr>
+			    <td style="background-color:pink">
+		    		<font size="2px"> 11</font>
+				</td>
+		   		<td id="TD10_0"  style="backGround-Color:#ffffff;font-size:12px"></td>
+		   		<td id="TD21_0"  style="backGround-Color:#ffffff;font-size:12px"></td>
+		   		<td id="TD32_0"  style="backGround-Color:#ffffff;font-size:12px"></td>
+		   		<td id="TD43_0"  style="backGround-Color:#ffffff;font-size:12px"></td>
+		   		<td id="TD54_0"  style="backGround-Color:#ffffff;font-size:12px"></td>
+		   		<td id="TD65_0"  style="backGround-Color:#ffffff;font-size:12px"></td>
+		   		<td id="TD76_0"  style="backGround-Color:#ffffff;font-size:12px"></td>
+			</tr>
+		</table> 
+				<input type="hidden" name="practiceContent.12XK1102.D9" value="[25, 26, 27]" />
+				<input type="hidden" name="practiceContent.12XK1201.03" value="[25, 26, 27]" />
+				<input type="hidden" name="practiceContent.16SZ1003.09" value="[25, 26, 27]" />
+				<input type="hidden" name="practiceContent.64TZ5001.E9" value="[25, 26, 27]" />
+				<input type="hidden" name="practiceContent.16SZ6002.80" value="[25, 26, 27]" />
+				<input type="hidden" name="practiceContent.27XK1103.03" value="[25, 26, 27]" />
+				<input type="hidden" name="practiceContent.26SJ5140.03" value="[25, 26, 27]" />
+				<input type="hidden" name="practiceContent.26SJ5201.01" value="[25, 26, 27]" />
+				<input type="hidden" name="practiceContent.24XK1706.08" value="[25, 26, 27]" />
+				<input type="hidden" name="practiceContent.64TH1003.02" value="[25, 26, 27]" />
+				<input type="hidden" name="practiceContent.13TH1034.21" value="[25, 26, 27]" />
+				<input type="hidden" name="practiceContent.16SZ1002.B4" value="[25, 26, 27]" />
+				<input type="hidden" name="practiceContent.67TX1001.12" value="[25, 26, 27]" />
+<script language="JavaScript">
+	// function CourseTable in TaskActivity.js
+	var language = "zh";           
+	var table0 = new CourseTable(2026,77);
+	var unitCount = 11;
+	var index=0;
+	var activity=null;
+		var teachers = [{id:1092,name:"夏明哲",lab:false},{id:6917,name:"程宏飞",lab:false}];
+		var actTeachers = [{id:6917,name:"程宏飞",lab:false},{id:1092,name:"夏明哲",lab:false}];
+		var assistant = _.filter(actTeachers, function(actTeacher) {
+			return (_.where(teachers, {id:actTeacher.id,name:actTeacher.name,lab:actTeacher.lab}).length == 0) && (actTeacher.lab == true);
+		});
+		var assistantName = "";
+		if (assistant.length > 0) {
+			assistantName = assistant[0].name;
+			actTeachers = _.reject(actTeachers, function(actTeacher) {
+				return _.where(assistant, {id:actTeacher.id}).length > 0;
+			});
+		}
+		var actTeacherId = [];
+		var actTeacherName = [];
+		for (var i = 0; i < actTeachers.length; i++) {
+			actTeacherId.push(actTeachers[i].id);
+			actTeacherName.push(actTeachers[i].name);
+		}
+		
+		var courseName = "矿物学与岩石学基础(27XK1103.03)";
+		
+			activity = new TaskActivity(actTeacherId.join(','),actTeacherName.join(','),"53677(27XK1103.03)",courseName,"27XK1103.03","205","*WM1315☆","01110100101000000000000000000000000000000000000000000",null,"",assistantName,"");
+			index =4*unitCount+6;
+			table0.activities[index][table0.activities[index].length]=activity;
+			index =4*unitCount+7;
+			table0.activities[index][table0.activities[index].length]=activity;
+		var teachers = [{id:1092,name:"夏明哲",lab:false},{id:6917,name:"程宏飞",lab:false}];
+		var actTeachers = [{id:6917,name:"程宏飞",lab:false},{id:1092,name:"夏明哲",lab:false}];
+		var assistant = _.filter(actTeachers, function(actTeacher) {
+			return (_.where(teachers, {id:actTeacher.id,name:actTeacher.name,lab:actTeacher.lab}).length == 0) && (actTeacher.lab == true);
+		});
+		var assistantName = "";
+		if (assistant.length > 0) {
+			assistantName = assistant[0].name;
+			actTeachers = _.reject(actTeachers, function(actTeacher) {
+				return _.where(assistant, {id:actTeacher.id}).length > 0;
+			});
+		}
+		var actTeacherId = [];
+		var actTeacherName = [];
+		for (var i = 0; i < actTeachers.length; i++) {
+			actTeacherId.push(actTeachers[i].id);
+			actTeacherName.push(actTeachers[i].name);
+		}
+		
+		var courseName = "矿物学与岩石学基础(27XK1103.03)";
+		
+			activity = new TaskActivity(actTeacherId.join(','),actTeacherName.join(','),"53677(27XK1103.03)",courseName,"27XK1103.03","205","*WM1315☆","01110100101000000000000000000000000000000000000000000",null,"",assistantName,"");
+			index =1*unitCount+6;
+			table0.activities[index][table0.activities[index].length]=activity;
+			index =1*unitCount+7;
+			table0.activities[index][table0.activities[index].length]=activity;
+		var teachers = [{id:1092,name:"夏明哲",lab:false},{id:6917,name:"程宏飞",lab:false}];
+		var actTeachers = [{id:1092,name:"夏明哲",lab:false}];
+		var assistant = _.filter(actTeachers, function(actTeacher) {
+			return (_.where(teachers, {id:actTeacher.id,name:actTeacher.name,lab:actTeacher.lab}).length == 0) && (actTeacher.lab == true);
+		});
+		var assistantName = "";
+		if (assistant.length > 0) {
+			assistantName = assistant[0].name;
+			actTeachers = _.reject(actTeachers, function(actTeacher) {
+				return _.where(assistant, {id:actTeacher.id}).length > 0;
+			});
+		}
+		var actTeacherId = [];
+		var actTeacherName = [];
+		for (var i = 0; i < actTeachers.length; i++) {
+			actTeacherId.push(actTeachers[i].id);
+			actTeacherName.push(actTeachers[i].name);
+		}
+		
+		var courseName = "矿物学与岩石学基础(27XK1103.03)";
+		
+			activity = new TaskActivity(actTeacherId.join(','),actTeacherName.join(','),"53677(27XK1103.03)",courseName,"27XK1103.03","1831","地质学基础实验室2","00001000000000000000000000000000000000000000000000000",null,"",assistantName,"常见造岩矿物鉴定（2）哲");
+			index =4*unitCount+6;
+			table0.activities[index][table0.activities[index].length]=activity;
+			index =4*unitCount+7;
+			table0.activities[index][table0.activities[index].length]=activity;
+		var teachers = [{id:1092,name:"夏明哲",lab:false},{id:6917,name:"程宏飞",lab:false}];
+		var actTeachers = [{id:1092,name:"夏明哲",lab:false}];
+		var assistant = _.filter(actTeachers, function(actTeacher) {
+			return (_.where(teachers, {id:actTeacher.id,name:actTeacher.name,lab:actTeacher.lab}).length == 0) && (actTeacher.lab == true);
+		});
+		var assistantName = "";
+		if (assistant.length > 0) {
+			assistantName = assistant[0].name;
+			actTeachers = _.reject(actTeachers, function(actTeacher) {
+				return _.where(assistant, {id:actTeacher.id}).length > 0;
+			});
+		}
+		var actTeacherId = [];
+		var actTeacherName = [];
+		for (var i = 0; i < actTeachers.length; i++) {
+			actTeacherId.push(actTeachers[i].id);
+			actTeacherName.push(actTeachers[i].name);
+		}
+		
+		var courseName = "矿物学与岩石学基础(27XK1103.03)";
+		
+			activity = new TaskActivity(actTeacherId.join(','),actTeacherName.join(','),"53677(27XK1103.03)",courseName,"27XK1103.03","1831","地质学基础实验室2","00001000000000000000000000000000000000000000000000000",null,"",assistantName,"常见造岩矿物鉴定（2）哲");
+			index =1*unitCount+6;
+			table0.activities[index][table0.activities[index].length]=activity;
+			index =1*unitCount+7;
+			table0.activities[index][table0.activities[index].length]=activity;
+		var teachers = [{id:1092,name:"夏明哲",lab:false},{id:6917,name:"程宏飞",lab:false}];
+		var actTeachers = [{id:1092,name:"夏明哲",lab:false}];
+		var assistant = _.filter(actTeachers, function(actTeacher) {
+			return (_.where(teachers, {id:actTeacher.id,name:actTeacher.name,lab:actTeacher.lab}).length == 0) && (actTeacher.lab == true);
+		});
+		var assistantName = "";
+		if (assistant.length > 0) {
+			assistantName = assistant[0].name;
+			actTeachers = _.reject(actTeachers, function(actTeacher) {
+				return _.where(assistant, {id:actTeacher.id}).length > 0;
+			});
+		}
+		var actTeacherId = [];
+		var actTeacherName = [];
+		for (var i = 0; i < actTeachers.length; i++) {
+			actTeacherId.push(actTeachers[i].id);
+			actTeacherName.push(actTeachers[i].name);
+		}
+		
+		var courseName = "矿物学与岩石学基础(27XK1103.03)";
+		
+			activity = new TaskActivity(actTeacherId.join(','),actTeacherName.join(','),"53677(27XK1103.03)",courseName,"27XK1103.03","1831","地质学基础实验室2","00000010000000000000000000000000000000000000000000000",null,"",assistantName,"喷出岩类哲");
+			index =4*unitCount+6;
+			table0.activities[index][table0.activities[index].length]=activity;
+			index =4*unitCount+7;
+			table0.activities[index][table0.activities[index].length]=activity;
+		var teachers = [{id:1092,name:"夏明哲",lab:false},{id:6917,name:"程宏飞",lab:false}];
+		var actTeachers = [{id:1092,name:"夏明哲",lab:false}];
+		var assistant = _.filter(actTeachers, function(actTeacher) {
+			return (_.where(teachers, {id:actTeacher.id,name:actTeacher.name,lab:actTeacher.lab}).length == 0) && (actTeacher.lab == true);
+		});
+		var assistantName = "";
+		if (assistant.length > 0) {
+			assistantName = assistant[0].name;
+			actTeachers = _.reject(actTeachers, function(actTeacher) {
+				return _.where(assistant, {id:actTeacher.id}).length > 0;
+			});
+		}
+		var actTeacherId = [];
+		var actTeacherName = [];
+		for (var i = 0; i < actTeachers.length; i++) {
+			actTeacherId.push(actTeachers[i].id);
+			actTeacherName.push(actTeachers[i].name);
+		}
+		
+		var courseName = "矿物学与岩石学基础(27XK1103.03)";
+		
+			activity = new TaskActivity(actTeacherId.join(','),actTeacherName.join(','),"53677(27XK1103.03)",courseName,"27XK1103.03","1831","地质学基础实验室2","00000010000000000000000000000000000000000000000000000",null,"",assistantName,"侵入岩类哲");
+			index =1*unitCount+6;
+			table0.activities[index][table0.activities[index].length]=activity;
+			index =1*unitCount+7;
+			table0.activities[index][table0.activities[index].length]=activity;
+		var teachers = [{id:1092,name:"夏明哲",lab:false},{id:6917,name:"程宏飞",lab:false}];
+		var actTeachers = [{id:1092,name:"夏明哲",lab:false}];
+		var assistant = _.filter(actTeachers, function(actTeacher) {
+			return (_.where(teachers, {id:actTeacher.id,name:actTeacher.name,lab:actTeacher.lab}).length == 0) && (actTeacher.lab == true);
+		});
+		var assistantName = "";
+		if (assistant.length > 0) {
+			assistantName = assistant[0].name;
+			actTeachers = _.reject(actTeachers, function(actTeacher) {
+				return _.where(assistant, {id:actTeacher.id}).length > 0;
+			});
+		}
+		var actTeacherId = [];
+		var actTeacherName = [];
+		for (var i = 0; i < actTeachers.length; i++) {
+			actTeacherId.push(actTeachers[i].id);
+			actTeacherName.push(actTeachers[i].name);
+		}
+		
+		var courseName = "矿物学与岩石学基础(27XK1103.03)";
+		
+			activity = new TaskActivity(actTeacherId.join(','),actTeacherName.join(','),"53677(27XK1103.03)",courseName,"27XK1103.03","1831","地质学基础实验室2","00000001000000000000000000000000000000000000000000000",null,"",assistantName,"内源沉积岩类");
+			index =4*unitCount+6;
+			table0.activities[index][table0.activities[index].length]=activity;
+			index =4*unitCount+7;
+			table0.activities[index][table0.activities[index].length]=activity;
+		var teachers = [{id:1092,name:"夏明哲",lab:false},{id:6917,name:"程宏飞",lab:false}];
+		var actTeachers = [{id:1092,name:"夏明哲",lab:false}];
+		var assistant = _.filter(actTeachers, function(actTeacher) {
+			return (_.where(teachers, {id:actTeacher.id,name:actTeacher.name,lab:actTeacher.lab}).length == 0) && (actTeacher.lab == true);
+		});
+		var assistantName = "";
+		if (assistant.length > 0) {
+			assistantName = assistant[0].name;
+			actTeachers = _.reject(actTeachers, function(actTeacher) {
+				return _.where(assistant, {id:actTeacher.id}).length > 0;
+			});
+		}
+		var actTeacherId = [];
+		var actTeacherName = [];
+		for (var i = 0; i < actTeachers.length; i++) {
+			actTeacherId.push(actTeachers[i].id);
+			actTeacherName.push(actTeachers[i].name);
+		}
+		
+		var courseName = "矿物学与岩石学基础(27XK1103.03)";
+		
+			activity = new TaskActivity(actTeacherId.join(','),actTeacherName.join(','),"53677(27XK1103.03)",courseName,"27XK1103.03","1831","地质学基础实验室2","00000001000000000000000000000000000000000000000000000",null,"",assistantName,"陆源碎屑岩类 哲");
+			index =1*unitCount+6;
+			table0.activities[index][table0.activities[index].length]=activity;
+			index =1*unitCount+7;
+			table0.activities[index][table0.activities[index].length]=activity;
+		var teachers = [{id:1092,name:"夏明哲",lab:false},{id:6917,name:"程宏飞",lab:false}];
+		var actTeachers = [{id:1092,name:"夏明哲",lab:false}];
+		var assistant = _.filter(actTeachers, function(actTeacher) {
+			return (_.where(teachers, {id:actTeacher.id,name:actTeacher.name,lab:actTeacher.lab}).length == 0) && (actTeacher.lab == true);
+		});
+		var assistantName = "";
+		if (assistant.length > 0) {
+			assistantName = assistant[0].name;
+			actTeachers = _.reject(actTeachers, function(actTeacher) {
+				return _.where(assistant, {id:actTeacher.id}).length > 0;
+			});
+		}
+		var actTeacherId = [];
+		var actTeacherName = [];
+		for (var i = 0; i < actTeachers.length; i++) {
+			actTeacherId.push(actTeachers[i].id);
+			actTeacherName.push(actTeachers[i].name);
+		}
+		
+		var courseName = "矿物学与岩石学基础(27XK1103.03)";
+		
+			activity = new TaskActivity(actTeacherId.join(','),actTeacherName.join(','),"53677(27XK1103.03)",courseName,"27XK1103.03","1831","地质学基础实验室2","00000000010000000000000000000000000000000000000000000",null,"",assistantName,"常见变质岩（2）哲");
+			index =2*unitCount+4;
+			table0.activities[index][table0.activities[index].length]=activity;
+			index =2*unitCount+5;
+			table0.activities[index][table0.activities[index].length]=activity;
+		var teachers = [{id:1092,name:"夏明哲",lab:false},{id:6917,name:"程宏飞",lab:false}];
+		var actTeachers = [{id:1092,name:"夏明哲",lab:false}];
+		var assistant = _.filter(actTeachers, function(actTeacher) {
+			return (_.where(teachers, {id:actTeacher.id,name:actTeacher.name,lab:actTeacher.lab}).length == 0) && (actTeacher.lab == true);
+		});
+		var assistantName = "";
+		if (assistant.length > 0) {
+			assistantName = assistant[0].name;
+			actTeachers = _.reject(actTeachers, function(actTeacher) {
+				return _.where(assistant, {id:actTeacher.id}).length > 0;
+			});
+		}
+		var actTeacherId = [];
+		var actTeacherName = [];
+		for (var i = 0; i < actTeachers.length; i++) {
+			actTeacherId.push(actTeachers[i].id);
+			actTeacherName.push(actTeachers[i].name);
+		}
+		
+		var courseName = "矿物学与岩石学基础(27XK1103.03)";
+		
+			activity = new TaskActivity(actTeacherId.join(','),actTeacherName.join(','),"53677(27XK1103.03)",courseName,"27XK1103.03","1831","地质学基础实验室2","00000000010000000000000000000000000000000000000000000",null,"",assistantName,"常见变质岩（1）哲");
+			index =1*unitCount+6;
+			table0.activities[index][table0.activities[index].length]=activity;
+			index =1*unitCount+7;
+			table0.activities[index][table0.activities[index].length]=activity;
+		var teachers = [{id:71,name:"韩少锋",lab:false}];
+		var actTeachers = [{id:71,name:"韩少锋",lab:false}];
+		var assistant = _.filter(actTeachers, function(actTeacher) {
+			return (_.where(teachers, {id:actTeacher.id,name:actTeacher.name,lab:actTeacher.lab}).length == 0) && (actTeacher.lab == true);
+		});
+		var assistantName = "";
+		if (assistant.length > 0) {
+			assistantName = assistant[0].name;
+			actTeachers = _.reject(actTeachers, function(actTeacher) {
+				return _.where(assistant, {id:actTeacher.id}).length > 0;
+			});
+		}
+		var actTeacherId = [];
+		var actTeacherName = [];
+		for (var i = 0; i < actTeachers.length; i++) {
+			actTeacherId.push(actTeachers[i].id);
+			actTeacherName.push(actTeachers[i].name);
+		}
+		
+		var courseName = "高等数学Ⅱ（二）(12XK1102.D9)";
+		
+			activity = new TaskActivity(actTeacherId.join(','),actTeacherName.join(','),"51703(12XK1102.D9)",courseName,"12XK1102.D9","617","*WH1102","01111111111111110000000000000000000000000000000000000",null,"",assistantName,"");
+			index =4*unitCount+2;
+			table0.activities[index][table0.activities[index].length]=activity;
+			index =4*unitCount+3;
+			table0.activities[index][table0.activities[index].length]=activity;
+		var teachers = [{id:71,name:"韩少锋",lab:false}];
+		var actTeachers = [{id:71,name:"韩少锋",lab:false}];
+		var assistant = _.filter(actTeachers, function(actTeacher) {
+			return (_.where(teachers, {id:actTeacher.id,name:actTeacher.name,lab:actTeacher.lab}).length == 0) && (actTeacher.lab == true);
+		});
+		var assistantName = "";
+		if (assistant.length > 0) {
+			assistantName = assistant[0].name;
+			actTeachers = _.reject(actTeachers, function(actTeacher) {
+				return _.where(assistant, {id:actTeacher.id}).length > 0;
+			});
+		}
+		var actTeacherId = [];
+		var actTeacherName = [];
+		for (var i = 0; i < actTeachers.length; i++) {
+			actTeacherId.push(actTeachers[i].id);
+			actTeacherName.push(actTeachers[i].name);
+		}
+		
+		var courseName = "高等数学Ⅱ（二）(12XK1102.D9)";
+		
+			activity = new TaskActivity(actTeacherId.join(','),actTeacherName.join(','),"51703(12XK1102.D9)",courseName,"12XK1102.D9","617","*WH1102","01111111111111110000000000000000000000000000000000000",null,"",assistantName,"");
+			index =2*unitCount+2;
+			table0.activities[index][table0.activities[index].length]=activity;
+			index =2*unitCount+3;
+			table0.activities[index][table0.activities[index].length]=activity;
+		var teachers = [{id:71,name:"韩少锋",lab:false}];
+		var actTeachers = [{id:71,name:"韩少锋",lab:false}];
+		var assistant = _.filter(actTeachers, function(actTeacher) {
+			return (_.where(teachers, {id:actTeacher.id,name:actTeacher.name,lab:actTeacher.lab}).length == 0) && (actTeacher.lab == true);
+		});
+		var assistantName = "";
+		if (assistant.length > 0) {
+			assistantName = assistant[0].name;
+			actTeachers = _.reject(actTeachers, function(actTeacher) {
+				return _.where(assistant, {id:actTeacher.id}).length > 0;
+			});
+		}
+		var actTeacherId = [];
+		var actTeacherName = [];
+		for (var i = 0; i < actTeachers.length; i++) {
+			actTeacherId.push(actTeachers[i].id);
+			actTeacherName.push(actTeachers[i].name);
+		}
+		
+		var courseName = "高等数学Ⅱ（二）(12XK1102.D9)";
+		
+			activity = new TaskActivity(actTeacherId.join(','),actTeacherName.join(','),"51703(12XK1102.D9)",courseName,"12XK1102.D9","617","*WH1102","01111111111111110000000000000000000000000000000000000",null,"",assistantName,"");
+			index =0*unitCount+2;
+			table0.activities[index][table0.activities[index].length]=activity;
+			index =0*unitCount+3;
+			table0.activities[index][table0.activities[index].length]=activity;
+		var teachers = [{id:7085,name:"杭兰平",lab:false}];
+		var actTeachers = [{id:7085,name:"杭兰平",lab:false},{id:10255,name:"连峻奇",lab:false},{id:10682,name:"黄婉童",lab:false}];
+		var assistant = _.filter(actTeachers, function(actTeacher) {
+			return (_.where(teachers, {id:actTeacher.id,name:actTeacher.name,lab:actTeacher.lab}).length == 0) && (actTeacher.lab == true);
+		});
+		var assistantName = "";
+		if (assistant.length > 0) {
+			assistantName = assistant[0].name;
+			actTeachers = _.reject(actTeachers, function(actTeacher) {
+				return _.where(assistant, {id:actTeacher.id}).length > 0;
+			});
+		}
+		var actTeacherId = [];
+		var actTeacherName = [];
+		for (var i = 0; i < actTeachers.length; i++) {
+			actTeacherId.push(actTeachers[i].id);
+			actTeacherName.push(actTeachers[i].name);
+		}
+		
+		var courseName = "篮球选项（体育二）(1405201X.01)";
+		
+			activity = new TaskActivity(actTeacherId.join(','),actTeacherName.join(','),"47250(1405201X.01)",courseName,"1405201X.01","1167","体育馆一楼篮球馆","00111111111111111111000000000000000000000000000000000",null,"",assistantName,"");
+			index =3*unitCount+6;
+			table0.activities[index][table0.activities[index].length]=activity;
+			index =3*unitCount+7;
+			table0.activities[index][table0.activities[index].length]=activity;
+		var teachers = [{id:7668,name:"郝苏君",lab:false}];
+		var actTeachers = [{id:7668,name:"郝苏君",lab:false}];
+		var assistant = _.filter(actTeachers, function(actTeacher) {
+			return (_.where(teachers, {id:actTeacher.id,name:actTeacher.name,lab:actTeacher.lab}).length == 0) && (actTeacher.lab == true);
+		});
+		var assistantName = "";
+		if (assistant.length > 0) {
+			assistantName = assistant[0].name;
+			actTeachers = _.reject(actTeachers, function(actTeacher) {
+				return _.where(assistant, {id:actTeacher.id}).length > 0;
+			});
+		}
+		var actTeacherId = [];
+		var actTeacherName = [];
+		for (var i = 0; i < actTeachers.length; i++) {
+			actTeacherId.push(actTeachers[i].id);
+			actTeacherName.push(actTeachers[i].name);
+		}
+		
+		var courseName = "中国近现代史纲要(16SZ1002.B4)";
+		
+			activity = new TaskActivity(actTeacherId.join(','),actTeacherName.join(','),"51724(16SZ1002.B4)",courseName,"16SZ1002.B4","648","*WH1306","01111111111111111000000000000000000000000000000000000",null,"",assistantName,"");
+			index =2*unitCount+6;
+			table0.activities[index][table0.activities[index].length]=activity;
+			index =2*unitCount+7;
+			table0.activities[index][table0.activities[index].length]=activity;
+		var teachers = [{id:7668,name:"郝苏君",lab:false}];
+		var actTeachers = [{id:7668,name:"郝苏君",lab:false}];
+		var assistant = _.filter(actTeachers, function(actTeacher) {
+			return (_.where(teachers, {id:actTeacher.id,name:actTeacher.name,lab:actTeacher.lab}).length == 0) && (actTeacher.lab == true);
+		});
+		var assistantName = "";
+		if (assistant.length > 0) {
+			assistantName = assistant[0].name;
+			actTeachers = _.reject(actTeachers, function(actTeacher) {
+				return _.where(assistant, {id:actTeacher.id}).length > 0;
+			});
+		}
+		var actTeacherId = [];
+		var actTeacherName = [];
+		for (var i = 0; i < actTeachers.length; i++) {
+			actTeacherId.push(actTeachers[i].id);
+			actTeacherName.push(actTeachers[i].name);
+		}
+		
+		var courseName = "中国近现代史纲要(16SZ1002.B4)";
+		
+			activity = new TaskActivity(actTeacherId.join(','),actTeacherName.join(','),"51724(16SZ1002.B4)",courseName,"16SZ1002.B4","646","*WH1304","00000000001000001000000000000000000000000000000000000",null,"",assistantName,"");
+			index =6*unitCount+2;
+			table0.activities[index][table0.activities[index].length]=activity;
+			index =6*unitCount+3;
+			table0.activities[index][table0.activities[index].length]=activity;
+		var teachers = [{id:273,name:"朱煜",lab:false}];
+		var actTeachers = [{id:273,name:"朱煜",lab:false}];
+		var assistant = _.filter(actTeachers, function(actTeacher) {
+			return (_.where(teachers, {id:actTeacher.id,name:actTeacher.name,lab:actTeacher.lab}).length == 0) && (actTeacher.lab == true);
+		});
+		var assistantName = "";
+		if (assistant.length > 0) {
+			assistantName = assistant[0].name;
+			actTeachers = _.reject(actTeachers, function(actTeacher) {
+				return _.where(assistant, {id:actTeacher.id}).length > 0;
+			});
+		}
+		var actTeacherId = [];
+		var actTeacherName = [];
+		for (var i = 0; i < actTeachers.length; i++) {
+			actTeacherId.push(actTeachers[i].id);
+			actTeacherName.push(actTeachers[i].name);
+		}
+		
+		var courseName = "马克思主义基本原理(16SZ1003.09)";
+		
+			activity = new TaskActivity(actTeacherId.join(','),actTeacherName.join(','),"51725(16SZ1003.09)",courseName,"16SZ1003.09","199","*WM1308","00000000011111111000000000000000000000000000000000000",null,"",assistantName,"");
+			index =0*unitCount+4;
+			table0.activities[index][table0.activities[index].length]=activity;
+			index =0*unitCount+5;
+			table0.activities[index][table0.activities[index].length]=activity;
+		var teachers = [{id:273,name:"朱煜",lab:false}];
+		var actTeachers = [{id:273,name:"朱煜",lab:false}];
+		var assistant = _.filter(actTeachers, function(actTeacher) {
+			return (_.where(teachers, {id:actTeacher.id,name:actTeacher.name,lab:actTeacher.lab}).length == 0) && (actTeacher.lab == true);
+		});
+		var assistantName = "";
+		if (assistant.length > 0) {
+			assistantName = assistant[0].name;
+			actTeachers = _.reject(actTeachers, function(actTeacher) {
+				return _.where(assistant, {id:actTeacher.id}).length > 0;
+			});
+		}
+		var actTeacherId = [];
+		var actTeacherName = [];
+		for (var i = 0; i < actTeachers.length; i++) {
+			actTeacherId.push(actTeachers[i].id);
+			actTeacherName.push(actTeachers[i].name);
+		}
+		
+		var courseName = "马克思主义基本原理(16SZ1003.09)";
+		
+			activity = new TaskActivity(actTeacherId.join(','),actTeacherName.join(','),"51725(16SZ1003.09)",courseName,"16SZ1003.09","317","*WX4102","01111111100000000000000000000000000000000000000000000",null,"",assistantName,"");
+			index =0*unitCount+4;
+			table0.activities[index][table0.activities[index].length]=activity;
+			index =0*unitCount+5;
+			table0.activities[index][table0.activities[index].length]=activity;
+		var teachers = [{id:273,name:"朱煜",lab:false}];
+		var actTeachers = [{id:273,name:"朱煜",lab:false}];
+		var assistant = _.filter(actTeachers, function(actTeacher) {
+			return (_.where(teachers, {id:actTeacher.id,name:actTeacher.name,lab:actTeacher.lab}).length == 0) && (actTeacher.lab == true);
+		});
+		var assistantName = "";
+		if (assistant.length > 0) {
+			assistantName = assistant[0].name;
+			actTeachers = _.reject(actTeachers, function(actTeacher) {
+				return _.where(assistant, {id:actTeacher.id}).length > 0;
+			});
+		}
+		var actTeacherId = [];
+		var actTeacherName = [];
+		for (var i = 0; i < actTeachers.length; i++) {
+			actTeacherId.push(actTeachers[i].id);
+			actTeacherName.push(actTeachers[i].name);
+		}
+		
+		var courseName = "马克思主义基本原理(16SZ1003.09)";
+		
+			activity = new TaskActivity(actTeacherId.join(','),actTeacherName.join(','),"51725(16SZ1003.09)",courseName,"16SZ1003.09","317","*WX4102","00000110000000000000000000000000000000000000000000000",null,"",assistantName,"");
+			index =5*unitCount+0;
+			table0.activities[index][table0.activities[index].length]=activity;
+			index =5*unitCount+1;
+			table0.activities[index][table0.activities[index].length]=activity;
+		var teachers = [{id:1480,name:"卓伟",lab:false}];
+		var actTeachers = [{id:1480,name:"卓伟",lab:false}];
+		var assistant = _.filter(actTeachers, function(actTeacher) {
+			return (_.where(teachers, {id:actTeacher.id,name:actTeacher.name,lab:actTeacher.lab}).length == 0) && (actTeacher.lab == true);
+		});
+		var assistantName = "";
+		if (assistant.length > 0) {
+			assistantName = assistant[0].name;
+			actTeachers = _.reject(actTeachers, function(actTeacher) {
+				return _.where(assistant, {id:actTeacher.id}).length > 0;
+			});
+		}
+		var actTeacherId = [];
+		var actTeacherName = [];
+		for (var i = 0; i < actTeachers.length; i++) {
+			actTeacherId.push(actTeachers[i].id);
+			actTeacherName.push(actTeachers[i].name);
+		}
+		
+		var courseName = "大学物理Ⅲ（一）(12XK1201.03)";
+		
+			activity = new TaskActivity(actTeacherId.join(','),actTeacherName.join(','),"52587(12XK1201.03)",courseName,"12XK1201.03","178","*WM1202","01111111111111111000000000000000000000000000000000000",null,"",assistantName,"");
+			index =3*unitCount+0;
+			table0.activities[index][table0.activities[index].length]=activity;
+			index =3*unitCount+1;
+			table0.activities[index][table0.activities[index].length]=activity;
+		var teachers = [{id:1480,name:"卓伟",lab:false}];
+		var actTeachers = [{id:1480,name:"卓伟",lab:false}];
+		var assistant = _.filter(actTeachers, function(actTeacher) {
+			return (_.where(teachers, {id:actTeacher.id,name:actTeacher.name,lab:actTeacher.lab}).length == 0) && (actTeacher.lab == true);
+		});
+		var assistantName = "";
+		if (assistant.length > 0) {
+			assistantName = assistant[0].name;
+			actTeachers = _.reject(actTeachers, function(actTeacher) {
+				return _.where(assistant, {id:actTeacher.id}).length > 0;
+			});
+		}
+		var actTeacherId = [];
+		var actTeacherName = [];
+		for (var i = 0; i < actTeachers.length; i++) {
+			actTeacherId.push(actTeachers[i].id);
+			actTeacherName.push(actTeachers[i].name);
+		}
+		
+		var courseName = "大学物理Ⅲ（一）(12XK1201.03)";
+		
+			activity = new TaskActivity(actTeacherId.join(','),actTeacherName.join(','),"52587(12XK1201.03)",courseName,"12XK1201.03","178","*WM1202","01111111111111111000000000000000000000000000000000000",null,"",assistantName,"");
+			index =1*unitCount+0;
+			table0.activities[index][table0.activities[index].length]=activity;
+			index =1*unitCount+1;
+			table0.activities[index][table0.activities[index].length]=activity;
+		var teachers = [{id:908,name:"唐招棣",lab:false}];
+		var actTeachers = [{id:908,name:"唐招棣",lab:false}];
+		var assistant = _.filter(actTeachers, function(actTeacher) {
+			return (_.where(teachers, {id:actTeacher.id,name:actTeacher.name,lab:actTeacher.lab}).length == 0) && (actTeacher.lab == true);
+		});
+		var assistantName = "";
+		if (assistant.length > 0) {
+			assistantName = assistant[0].name;
+			actTeachers = _.reject(actTeachers, function(actTeacher) {
+				return _.where(assistant, {id:actTeacher.id}).length > 0;
+			});
+		}
+		var actTeacherId = [];
+		var actTeacherName = [];
+		for (var i = 0; i < actTeachers.length; i++) {
+			actTeacherId.push(actTeachers[i].id);
+			actTeacherName.push(actTeachers[i].name);
+		}
+		
+		var courseName = "大学英语（二）(13TH1034.21)";
+		
+			activity = new TaskActivity(actTeacherId.join(','),actTeacherName.join(','),"59004(13TH1034.21)",courseName,"13TH1034.21","282","*WX2408","01111111111111100000000000000000000000000000000000000",null,"",assistantName,"");
+			index =3*unitCount+4;
+			table0.activities[index][table0.activities[index].length]=activity;
+			index =3*unitCount+5;
+			table0.activities[index][table0.activities[index].length]=activity;
+		var teachers = [{id:908,name:"唐招棣",lab:false}];
+		var actTeachers = [{id:908,name:"唐招棣",lab:false}];
+		var assistant = _.filter(actTeachers, function(actTeacher) {
+			return (_.where(teachers, {id:actTeacher.id,name:actTeacher.name,lab:actTeacher.lab}).length == 0) && (actTeacher.lab == true);
+		});
+		var assistantName = "";
+		if (assistant.length > 0) {
+			assistantName = assistant[0].name;
+			actTeachers = _.reject(actTeachers, function(actTeacher) {
+				return _.where(assistant, {id:actTeacher.id}).length > 0;
+			});
+		}
+		var actTeacherId = [];
+		var actTeacherName = [];
+		for (var i = 0; i < actTeachers.length; i++) {
+			actTeacherId.push(actTeachers[i].id);
+			actTeacherName.push(actTeachers[i].name);
+		}
+		
+		var courseName = "大学英语（二）(13TH1034.21)";
+		
+			activity = new TaskActivity(actTeacherId.join(','),actTeacherName.join(','),"59004(13TH1034.21)",courseName,"13TH1034.21","282","*WX2408","01111111111111100000000000000000000000000000000000000",null,"",assistantName,"");
+			index =0*unitCount+0;
+			table0.activities[index][table0.activities[index].length]=activity;
+			index =0*unitCount+1;
+			table0.activities[index][table0.activities[index].length]=activity;
+		var teachers = [{id:2071,name:"高晓黎",lab:false}];
+		var actTeachers = [{id:2071,name:"高晓黎",lab:false}];
+		var assistant = _.filter(actTeachers, function(actTeacher) {
+			return (_.where(teachers, {id:actTeacher.id,name:actTeacher.name,lab:actTeacher.lab}).length == 0) && (actTeacher.lab == true);
+		});
+		var assistantName = "";
+		if (assistant.length > 0) {
+			assistantName = assistant[0].name;
+			actTeachers = _.reject(actTeachers, function(actTeacher) {
+				return _.where(assistant, {id:actTeacher.id}).length > 0;
+			});
+		}
+		var actTeacherId = [];
+		var actTeacherName = [];
+		for (var i = 0; i < actTeachers.length; i++) {
+			actTeacherId.push(actTeachers[i].id);
+			actTeacherName.push(actTeachers[i].name);
+		}
+		
+		var courseName = "美术鉴赏之中式美术品道(39TX1030.02)";
+		
+			activity = new TaskActivity(actTeacherId.join(','),actTeacherName.join(','),"59089(39TX1030.02)",courseName,"39TX1030.02","577","*WM3101▲","01111111101110000000000000000000000000000000000000000",null,"",assistantName,"");
+			index =4*unitCount+8;
+			table0.activities[index][table0.activities[index].length]=activity;
+			index =4*unitCount+9;
+			table0.activities[index][table0.activities[index].length]=activity;
+			index =4*unitCount+10;
+			table0.activities[index][table0.activities[index].length]=activity;
+		var teachers = [{id:345,name:"李珂",lab:true}];
+		var actTeachers = [{id:345,name:"李珂",lab:true}];
+		var assistant = _.filter(actTeachers, function(actTeacher) {
+			return (_.where(teachers, {id:actTeacher.id,name:actTeacher.name,lab:actTeacher.lab}).length == 0) && (actTeacher.lab == true);
+		});
+		var assistantName = "";
+		if (assistant.length > 0) {
+			assistantName = assistant[0].name;
+			actTeachers = _.reject(actTeachers, function(actTeacher) {
+				return _.where(assistant, {id:actTeacher.id}).length > 0;
+			});
+		}
+		var actTeacherId = [];
+		var actTeacherName = [];
+		for (var i = 0; i < actTeachers.length; i++) {
+			actTeacherId.push(actTeachers[i].id);
+			actTeacherName.push(actTeachers[i].name);
+		}
+		
+		var courseName = "大学生创业基础(67TX1001.12)";
+		
+			activity = new TaskActivity(actTeacherId.join(','),actTeacherName.join(','),"52665(67TX1001.12)",courseName,"67TX1001.12","322","*WX4203","01001001000000000000000000000000000000000000000000000",null,"",assistantName,"");
+			index =0*unitCount+8;
+			table0.activities[index][table0.activities[index].length]=activity;
+			index =0*unitCount+9;
+			table0.activities[index][table0.activities[index].length]=activity;
+			index =0*unitCount+10;
+			table0.activities[index][table0.activities[index].length]=activity;
+		var teachers = [{id:345,name:"李珂",lab:true}];
+		var actTeachers = [{id:345,name:"李珂",lab:true}];
+		var assistant = _.filter(actTeachers, function(actTeacher) {
+			return (_.where(teachers, {id:actTeacher.id,name:actTeacher.name,lab:actTeacher.lab}).length == 0) && (actTeacher.lab == true);
+		});
+		var assistantName = "";
+		if (assistant.length > 0) {
+			assistantName = assistant[0].name;
+			actTeachers = _.reject(actTeachers, function(actTeacher) {
+				return _.where(assistant, {id:actTeacher.id}).length > 0;
+			});
+		}
+		var actTeacherId = [];
+		var actTeacherName = [];
+		for (var i = 0; i < actTeachers.length; i++) {
+			actTeacherId.push(actTeachers[i].id);
+			actTeacherName.push(actTeachers[i].name);
+		}
+		
+		var courseName = "大学生创业基础(67TX1001.12)";
+		
+			activity = new TaskActivity(actTeacherId.join(','),actTeacherName.join(','),"52665(67TX1001.12)",courseName,"67TX1001.12","322","*WX4203","00000000000001000000000000000000000000000000000000000",null,"",assistantName,"");
+			index =5*unitCount+1;
+			table0.activities[index][table0.activities[index].length]=activity;
+			index =5*unitCount+2;
+			table0.activities[index][table0.activities[index].length]=activity;
+			index =5*unitCount+3;
+			table0.activities[index][table0.activities[index].length]=activity;
+		var teachers = [{id:9454,name:"于天姿",lab:false}];
+		var actTeachers = [{id:9454,name:"于天姿",lab:false}];
+		var assistant = _.filter(actTeachers, function(actTeacher) {
+			return (_.where(teachers, {id:actTeacher.id,name:actTeacher.name,lab:actTeacher.lab}).length == 0) && (actTeacher.lab == true);
+		});
+		var assistantName = "";
+		if (assistant.length > 0) {
+			assistantName = assistant[0].name;
+			actTeachers = _.reject(actTeachers, function(actTeacher) {
+				return _.where(assistant, {id:actTeacher.id}).length > 0;
+			});
+		}
+		var actTeacherId = [];
+		var actTeacherName = [];
+		for (var i = 0; i < actTeachers.length; i++) {
+			actTeacherId.push(actTeachers[i].id);
+			actTeacherName.push(actTeachers[i].name);
+		}
+		
+		var courseName = "“案”说法律(11TX1019.01)";
+		
+			activity = new TaskActivity(actTeacherId.join(','),actTeacherName.join(','),"54199(11TX1019.01)",courseName,"11TX1019.01","632","*WH1204","01111111101110000000000000000000000000000000000000000",null,"",assistantName,"");
+			index =2*unitCount+8;
+			table0.activities[index][table0.activities[index].length]=activity;
+			index =2*unitCount+9;
+			table0.activities[index][table0.activities[index].length]=activity;
+			index =2*unitCount+10;
+			table0.activities[index][table0.activities[index].length]=activity;
+		var teachers = [{id:3423,name:"王会峰",lab:true},{id:2456,name:"梁文家",lab:true}];
+		var actTeachers = [{id:3423,name:"王会峰",lab:true},{id:2456,name:"梁文家",lab:true}];
+		var assistant = _.filter(actTeachers, function(actTeacher) {
+			return (_.where(teachers, {id:actTeacher.id,name:actTeacher.name,lab:actTeacher.lab}).length == 0) && (actTeacher.lab == true);
+		});
+		var assistantName = "";
+		if (assistant.length > 0) {
+			assistantName = assistant[0].name;
+			actTeachers = _.reject(actTeachers, function(actTeacher) {
+				return _.where(assistant, {id:actTeacher.id}).length > 0;
+			});
+		}
+		var actTeacherId = [];
+		var actTeacherName = [];
+		for (var i = 0; i < actTeachers.length; i++) {
+			actTeacherId.push(actTeachers[i].id);
+			actTeacherName.push(actTeachers[i].name);
+		}
+		
+		var courseName = "PCB板设计与制作(32TX1002.01)";
+		
+			activity = new TaskActivity(actTeacherId.join(','),actTeacherName.join(','),"52228(32TX1002.01)",courseName,"32TX1002.01","167","*WM1101","01111111101110000000000000000000000000000000000000000",null,"",assistantName,"");
+			index =3*unitCount+8;
+			table0.activities[index][table0.activities[index].length]=activity;
+			index =3*unitCount+9;
+			table0.activities[index][table0.activities[index].length]=activity;
+			index =3*unitCount+10;
+			table0.activities[index][table0.activities[index].length]=activity;
+		var teachers = [{id:2252,name:"张淼艳",lab:false}];
+		var actTeachers = [{id:2252,name:"张淼艳",lab:false}];
+		var assistant = _.filter(actTeachers, function(actTeacher) {
+			return (_.where(teachers, {id:actTeacher.id,name:actTeacher.name,lab:actTeacher.lab}).length == 0) && (actTeacher.lab == true);
+		});
+		var assistantName = "";
+		if (assistant.length > 0) {
+			assistantName = assistant[0].name;
+			actTeachers = _.reject(actTeachers, function(actTeacher) {
+				return _.where(assistant, {id:actTeacher.id}).length > 0;
+			});
+		}
+		var actTeacherId = [];
+		var actTeacherName = [];
+		for (var i = 0; i < actTeachers.length; i++) {
+			actTeacherId.push(actTeachers[i].id);
+			actTeacherName.push(actTeachers[i].name);
+		}
+		
+		var courseName = "C语言程序设计(24XK1706.08)";
+		
+			activity = new TaskActivity(actTeacherId.join(','),actTeacherName.join(','),"59282(24XK1706.08)",courseName,"24XK1706.08","563,568","*WM2204机房,*WM2206机房","01110100110000000000000000000000000000000000000000000",null,"",assistantName,"");
+			index =3*unitCount+2;
+			table0.activities[index][table0.activities[index].length]=activity;
+			index =3*unitCount+3;
+			table0.activities[index][table0.activities[index].length]=activity;
+		var teachers = [{id:2252,name:"张淼艳",lab:false}];
+		var actTeachers = [{id:2252,name:"张淼艳",lab:false}];
+		var assistant = _.filter(actTeachers, function(actTeacher) {
+			return (_.where(teachers, {id:actTeacher.id,name:actTeacher.name,lab:actTeacher.lab}).length == 0) && (actTeacher.lab == true);
+		});
+		var assistantName = "";
+		if (assistant.length > 0) {
+			assistantName = assistant[0].name;
+			actTeachers = _.reject(actTeachers, function(actTeacher) {
+				return _.where(assistant, {id:actTeacher.id}).length > 0;
+			});
+		}
+		var actTeacherId = [];
+		var actTeacherName = [];
+		for (var i = 0; i < actTeachers.length; i++) {
+			actTeacherId.push(actTeachers[i].id);
+			actTeacherName.push(actTeachers[i].name);
+		}
+		
+		var courseName = "C语言程序设计(24XK1706.08)";
+		
+			activity = new TaskActivity(actTeacherId.join(','),actTeacherName.join(','),"59282(24XK1706.08)",courseName,"24XK1706.08","563,568","*WM2204机房,*WM2206机房","00000101010000000000000000000000000000000000000000000",null,"",assistantName,"");
+			index =1*unitCount+4;
+			table0.activities[index][table0.activities[index].length]=activity;
+			index =1*unitCount+5;
+			table0.activities[index][table0.activities[index].length]=activity;
+		var teachers = [{id:2252,name:"张淼艳",lab:false}];
+		var actTeachers = [{id:2252,name:"张淼艳",lab:false}];
+		var assistant = _.filter(actTeachers, function(actTeacher) {
+			return (_.where(teachers, {id:actTeacher.id,name:actTeacher.name,lab:actTeacher.lab}).length == 0) && (actTeacher.lab == true);
+		});
+		var assistantName = "";
+		if (assistant.length > 0) {
+			assistantName = assistant[0].name;
+			actTeachers = _.reject(actTeachers, function(actTeacher) {
+				return _.where(assistant, {id:actTeacher.id}).length > 0;
+			});
+		}
+		var actTeacherId = [];
+		var actTeacherName = [];
+		for (var i = 0; i < actTeachers.length; i++) {
+			actTeacherId.push(actTeachers[i].id);
+			actTeacherName.push(actTeachers[i].name);
+		}
+		
+		var courseName = "C语言程序设计(24XK1706.08)";
+		
+			activity = new TaskActivity(actTeacherId.join(','),actTeacherName.join(','),"59282(24XK1706.08)",courseName,"24XK1706.08","582","*WM3303","01111010100000000000000000000000000000000000000000000",null,"",assistantName,"");
+			index =1*unitCount+4;
+			table0.activities[index][table0.activities[index].length]=activity;
+			index =1*unitCount+5;
+			table0.activities[index][table0.activities[index].length]=activity;
+		var teachers = [{id:2252,name:"张淼艳",lab:false}];
+		var actTeachers = [{id:2252,name:"张淼艳",lab:false}];
+		var assistant = _.filter(actTeachers, function(actTeacher) {
+			return (_.where(teachers, {id:actTeacher.id,name:actTeacher.name,lab:actTeacher.lab}).length == 0) && (actTeacher.lab == true);
+		});
+		var assistantName = "";
+		if (assistant.length > 0) {
+			assistantName = assistant[0].name;
+			actTeachers = _.reject(actTeachers, function(actTeacher) {
+				return _.where(assistant, {id:actTeacher.id}).length > 0;
+			});
+		}
+		var actTeacherId = [];
+		var actTeacherName = [];
+		for (var i = 0; i < actTeachers.length; i++) {
+			actTeacherId.push(actTeachers[i].id);
+			actTeacherName.push(actTeachers[i].name);
+		}
+		
+		var courseName = "C语言程序设计(24XK1706.08)";
+		
+			activity = new TaskActivity(actTeacherId.join(','),actTeacherName.join(','),"59282(24XK1706.08)",courseName,"24XK1706.08","608","*WM3203","00001011000000000000000000000000000000000000000000000",null,"",assistantName,"");
+			index =3*unitCount+2;
+			table0.activities[index][table0.activities[index].length]=activity;
+			index =3*unitCount+3;
+			table0.activities[index][table0.activities[index].length]=activity;
+		var teachers = [{id:3093,name:"韩芳",lab:false}];
+		var actTeachers = [{id:3093,name:"韩芳",lab:false}];
+		var assistant = _.filter(actTeachers, function(actTeacher) {
+			return (_.where(teachers, {id:actTeacher.id,name:actTeacher.name,lab:actTeacher.lab}).length == 0) && (actTeacher.lab == true);
+		});
+		var assistantName = "";
+		if (assistant.length > 0) {
+			assistantName = assistant[0].name;
+			actTeachers = _.reject(actTeachers, function(actTeacher) {
+				return _.where(assistant, {id:actTeacher.id}).length > 0;
+			});
+		}
+		var actTeacherId = [];
+		var actTeacherName = [];
+		for (var i = 0; i < actTeachers.length; i++) {
+			actTeacherId.push(actTeachers[i].id);
+			actTeacherName.push(actTeachers[i].name);
+		}
+		
+		var courseName = "国家安全教育(64TH1003.02)";
+		
+			activity = new TaskActivity(actTeacherId.join(','),actTeacherName.join(','),"51675(64TH1003.02)",courseName,"64TH1003.02","231","*WT1101-招就","01111111100000000000000000000000000000000000000000000",null,"",assistantName,"");
+			index =0*unitCount+6;
+			table0.activities[index][table0.activities[index].length]=activity;
+			index =0*unitCount+7;
+			table0.activities[index][table0.activities[index].length]=activity;
+	table0.marshalTable(2,1,26);
+	fillTable(table0,7,11,0);
+</script>
+   		    <br>
+ 
+<strong>课程列表:</strong>
+<div class="grid">
+
+
+<table id="grid12042826911" class="gridtable">
+<thead class="gridhead">
+
+
+<tr>
+<th  width="10%" >序号</th>
+<th  width="10%" >课程序号</th>
+<th  width="15%" >课程代码</th>
+<th  width="15%" >课程名称</th>
+<th  width="10%" >课程类别</th>
+<th  width="10%" >学分</th>
+<th  width="10%" >修读类别</th>
+<th  width="10%" >修读类别细分</th>
+<th  width="10%" >起始周</th>
+<th  width="15%" >教师</th>
+<th  width="15%" >备注</th>
+<th  width="10%" >操作</th>
+</tr>
+
+</thead>
+
+<tbody id="grid12042826911_data"><tr>		<td>1</td>
+<td>		<a href="/eams/courseTableForStd!taskTable.action?lesson.id=403802" onclick="return bg.Go(this,null)" title="点击显示单个教学任务具体安排">11TX1019.01</a>
+</td><td>11TX1019</td><td>“案”说法律</td><td>		 社会科学与公共责任（2022）
+</td><td>2</td><td>				正常
+</td><td></td>		<td>1-8,10-12</td>
+<td>于天姿</td><td>      			
+</td><td>			<a href="/eams/courseTableForStd!teachPlanInfo.action?lesson.id=403802" target="_blank">授课计划</a>
+			<a href="/eams/courseTableForStd!courseSummaryInfo.action?lesson.id=403802" target="_blank">课程小节</a>
+</td></tr><tr>		<td>2</td>
+<td>		<a href="/eams/courseTableForStd!taskTable.action?lesson.id=393189" onclick="return bg.Go(this,null)" title="点击显示单个教学任务具体安排">12XK1102.D9</a>
+</td><td>12XK1102</td><td>高等数学Ⅱ（二）</td><td>		 学科基础课程（2022）
+</td><td>5</td><td>				正常
+</td><td></td>		<td>1-15</td>
+<td>韩少锋</td><td>      			
+      			<br/>
+      			
+      			<br/>
+      			
+</td><td>			<a href="/eams/courseTableForStd!teachPlanInfo.action?lesson.id=393189" target="_blank">授课计划</a>
+			<a href="/eams/courseTableForStd!courseSummaryInfo.action?lesson.id=393189" target="_blank">课程小节</a>
+</td></tr><tr>		<td>3</td>
+<td>		<a href="/eams/courseTableForStd!taskTable.action?lesson.id=395388" onclick="return bg.Go(this,null)" title="点击显示单个教学任务具体安排">12XK1201.03</a>
+</td><td>12XK1201</td><td>大学物理Ⅲ（一）</td><td>		 学科基础课程（2022）
+</td><td>3.5</td><td>				正常
+</td><td></td>		<td>1-16</td>
+<td>卓伟</td><td>      			
+      			<br/>
+      			
+</td><td>			<a href="/eams/courseTableForStd!teachPlanInfo.action?lesson.id=395388" target="_blank">授课计划</a>
+			<a href="/eams/courseTableForStd!courseSummaryInfo.action?lesson.id=395388" target="_blank">课程小节</a>
+</td></tr><tr>		<td>4</td>
+<td>		<a href="/eams/courseTableForStd!taskTable.action?lesson.id=404289" onclick="return bg.Go(this,null)" title="点击显示单个教学任务具体安排">13TH1034.21</a>
+</td><td>13TH1034</td><td>大学英语（二）</td><td>		 外语类通用课程群（2022）
+</td><td>3</td><td>				正常
+</td><td></td>		<td>1-14</td>
+<td>唐招棣</td><td>      			
+      			<br/>
+      			
+</td><td>			<a href="/eams/courseTableForStd!teachPlanInfo.action?lesson.id=404289" target="_blank">授课计划</a>
+			<a href="/eams/courseTableForStd!courseSummaryInfo.action?lesson.id=404289" target="_blank">课程小节</a>
+</td></tr><tr>		<td>5</td>
+<td>		<a href="/eams/courseTableForStd!taskTable.action?lesson.id=405547" onclick="return bg.Go(this,null)" title="点击显示单个教学任务具体安排">1405201X.01</a>
+</td><td>1405201X</td><td>篮球选项（体育二）</td><td>		 通识教育课程
+</td><td>1</td><td>				正常
+</td><td></td>		<td>2-19</td>
+<td>杭兰平</td><td>      			
+</td><td>			<a href="/eams/courseTableForStd!teachPlanInfo.action?lesson.id=405547" target="_blank">授课计划</a>
+			<a href="/eams/courseTableForStd!courseSummaryInfo.action?lesson.id=405547" target="_blank">课程小节</a>
+</td></tr><tr>		<td>6</td>
+<td>		<a href="/eams/courseTableForStd!taskTable.action?lesson.id=404511" onclick="return bg.Go(this,null)" title="点击显示单个教学任务具体安排">16SZ1002.B4</a>
+</td><td>16SZ1002</td><td>中国近现代史纲要</td><td>		 思想政治理论课程（2022）
+</td><td>3</td><td>				正常
+</td><td></td>		<td>1-16</td>
+<td>郝苏君</td><td>      			
+      			<br/>
+      			
+</td><td>			<a href="/eams/courseTableForStd!teachPlanInfo.action?lesson.id=404511" target="_blank">授课计划</a>
+			<a href="/eams/courseTableForStd!courseSummaryInfo.action?lesson.id=404511" target="_blank">课程小节</a>
+</td></tr><tr>		<td>7</td>
+<td>		<a href="/eams/courseTableForStd!taskTable.action?lesson.id=396347" onclick="return bg.Go(this,null)" title="点击显示单个教学任务具体安排">16SZ1003.09</a>
+</td><td>16SZ1003</td><td>马克思主义基本原理</td><td>		 思想政治理论课程（2022）
+</td><td>3</td><td>				正常
+</td><td></td>		<td>1-16</td>
+<td>朱煜</td><td>      			
+      			<br/>
+      			
+      			<br/>
+      			
+</td><td>			<a href="/eams/courseTableForStd!teachPlanInfo.action?lesson.id=396347" target="_blank">授课计划</a>
+			<a href="/eams/courseTableForStd!courseSummaryInfo.action?lesson.id=396347" target="_blank">课程小节</a>
+</td></tr><tr>		<td>8</td>
+<td>		<a href="/eams/courseTableForStd!taskTable.action?lesson.id=397387" onclick="return bg.Go(this,null)" title="点击显示单个教学任务具体安排">16SZ6002.80</a>
+</td><td>16SZ6002</td><td>形势与政策（二）</td><td>		 思想政治理论课程（2022）
+</td><td>0.25</td><td>				正常
+</td><td></td>		<td>1-2</td>
+<td>侯梦阳</td><td></td><td>			<a href="/eams/courseTableForStd!teachPlanInfo.action?lesson.id=397387" target="_blank">授课计划</a>
+			<a href="/eams/courseTableForStd!courseSummaryInfo.action?lesson.id=397387" target="_blank">课程小节</a>
+</td></tr><tr>		<td>9</td>
+<td>		<a href="/eams/courseTableForStd!taskTable.action?lesson.id=404107" onclick="return bg.Go(this,null)" title="点击显示单个教学任务具体安排">24XK1706.08</a>
+</td><td>24XK1706</td><td>C语言程序设计</td><td>		 学科基础课程（2022）
+</td><td>2</td><td>				正常
+</td><td></td>		<td>1-9</td>
+<td>张淼艳</td><td>      			
+      			<br/>
+      			
+      			<br/>
+      			
+      			<br/>
+      			
+</td><td>			<a href="/eams/courseTableForStd!teachPlanInfo.action?lesson.id=404107" target="_blank">授课计划</a>
+			<a href="/eams/courseTableForStd!courseSummaryInfo.action?lesson.id=404107" target="_blank">课程小节</a>
+</td></tr><tr>		<td>10</td>
+<td>		<a href="/eams/courseTableForStd!taskTable.action?lesson.id=400872" onclick="return bg.Go(this,null)" title="点击显示单个教学任务具体安排">26SJ5140.03</a>
+</td><td>26SJ5140</td><td>地质认识实习</td><td>		 实习实践课程（2022）
+</td><td>1</td><td>				正常
+</td><td></td>		<td>1</td>
+<td>安鹏,刘聪</td><td></td><td>			<a href="/eams/courseTableForStd!teachPlanInfo.action?lesson.id=400872" target="_blank">授课计划</a>
+			<a href="/eams/courseTableForStd!courseSummaryInfo.action?lesson.id=400872" target="_blank">课程小节</a>
+</td></tr><tr>		<td>11</td>
+<td>		<a href="/eams/courseTableForStd!taskTable.action?lesson.id=402563" onclick="return bg.Go(this,null)" title="点击显示单个教学任务具体安排">26SJ5201.01</a>
+</td><td>26SJ5201</td><td>地球物理认识实习</td><td>		 实习实践课程（2022）
+</td><td>1</td><td>				正常
+</td><td></td>		<td>1</td>
+<td>包乾宗,纪新林,王飞</td><td></td><td>			<a href="/eams/courseTableForStd!teachPlanInfo.action?lesson.id=402563" target="_blank">授课计划</a>
+			<a href="/eams/courseTableForStd!courseSummaryInfo.action?lesson.id=402563" target="_blank">课程小节</a>
+</td></tr><tr>		<td>12</td>
+<td>		<a href="/eams/courseTableForStd!taskTable.action?lesson.id=400868" onclick="return bg.Go(this,null)" title="点击显示单个教学任务具体安排">27XK1103.03</a>
+</td><td>27XK1103</td><td>矿物学与岩石学基础</td><td>		 学科基础课程（2022）
+</td><td>2.5</td><td>				正常
+</td><td></td>		<td>1-10</td>
+<td>夏明哲,程宏飞</td><td>      			
+      			<br/>
+      			
+      			<br/>
+      			
+      			<br/>
+      			
+      			<br/>
+      			
+      			<br/>
+      			
+      			<br/>
+      			
+      			<br/>
+      			
+      			<br/>
+      			
+      			<br/>
+      			
+</td><td>			<a href="/eams/courseTableForStd!teachPlanInfo.action?lesson.id=400868" target="_blank">授课计划</a>
+			<a href="/eams/courseTableForStd!courseSummaryInfo.action?lesson.id=400868" target="_blank">课程小节</a>
+</td></tr><tr>		<td>13</td>
+<td>		<a href="/eams/courseTableForStd!taskTable.action?lesson.id=403924" onclick="return bg.Go(this,null)" title="点击显示单个教学任务具体安排">32TX1002.01</a>
+</td><td>32TX1002</td><td>PCB板设计与制作</td><td>		 科学探索与技术创新（2022）
+</td><td>2</td><td>				正常
+</td><td></td>		<td>1-8,10-12</td>
+<td>王会峰,梁文家</td><td>      			
+</td><td>			<a href="/eams/courseTableForStd!teachPlanInfo.action?lesson.id=403924" target="_blank">授课计划</a>
+			<a href="/eams/courseTableForStd!courseSummaryInfo.action?lesson.id=403924" target="_blank">课程小节</a>
+</td></tr><tr>		<td>14</td>
+<td>		<a href="/eams/courseTableForStd!taskTable.action?lesson.id=403999" onclick="return bg.Go(this,null)" title="点击显示单个教学任务具体安排">39TX1030.02</a>
+</td><td>39TX1030</td><td>美术鉴赏之中式美术品道</td><td>		 文化艺术审美理论（2022）
+</td><td>2</td><td>				正常
+</td><td></td>		<td>1-8,10-12</td>
+<td>高晓黎</td><td>      			
+</td><td>			<a href="/eams/courseTableForStd!teachPlanInfo.action?lesson.id=403999" target="_blank">授课计划</a>
+			<a href="/eams/courseTableForStd!courseSummaryInfo.action?lesson.id=403999" target="_blank">课程小节</a>
+</td></tr><tr>		<td>15</td>
+<td>		<a href="/eams/courseTableForStd!taskTable.action?lesson.id=404183" onclick="return bg.Go(this,null)" title="点击显示单个教学任务具体安排">64TH1003.02</a>
+</td><td>64TH1003</td><td>国家安全教育</td><td>		 军事与国家安全教育类（2022）
+</td><td>1</td><td>				正常
+</td><td></td>		<td>1-8</td>
+<td>韩芳</td><td>      			
+</td><td>			<a href="/eams/courseTableForStd!teachPlanInfo.action?lesson.id=404183" target="_blank">授课计划</a>
+			<a href="/eams/courseTableForStd!courseSummaryInfo.action?lesson.id=404183" target="_blank">课程小节</a>
+</td></tr><tr>		<td>16</td>
+<td>		<a href="/eams/courseTableForStd!taskTable.action?lesson.id=397111" onclick="return bg.Go(this,null)" title="点击显示单个教学任务具体安排">64TZ5001.E9</a>
+</td><td>64TZ5001</td><td>德育实践（一）</td><td>		 素质拓展实践课程（2022）
+</td><td>0.25</td><td>				正常
+</td><td></td>		<td>1-18</td>
+<td>朱禹诚</td><td></td><td>			<a href="/eams/courseTableForStd!teachPlanInfo.action?lesson.id=397111" target="_blank">授课计划</a>
+			<a href="/eams/courseTableForStd!courseSummaryInfo.action?lesson.id=397111" target="_blank">课程小节</a>
+</td></tr><tr>		<td>17</td>
+<td>		<a href="/eams/courseTableForStd!taskTable.action?lesson.id=405478" onclick="return bg.Go(this,null)" title="点击显示单个教学任务具体安排">67TX1001.12</a>
+</td><td>67TX1001</td><td>大学生创业基础</td><td>		 创新创业类（2022）
+</td><td>2</td><td>				正常
+</td><td></td>		<td>1,4,7,13</td>
+<td>李珂</td><td>      			
+      			<br/>
+      			
+</td><td>			<a href="/eams/courseTableForStd!teachPlanInfo.action?lesson.id=405478" target="_blank">授课计划</a>
+			<a href="/eams/courseTableForStd!courseSummaryInfo.action?lesson.id=405478" target="_blank">课程小节</a>
+</td></tr></tbody>
+</table>
+</div>
+<script type="text/javascript">
+  var clearCheckbox_grid12042826911 = function() {
+    jQuery("#grid12042826911").find(".box:checkbox").removeProp("checked");
+    jQuery("#grid12042826911").find(".gridselect-top :checkbox").removeProp("checked");
+    return true;
+  }
+  
+  page_grid12042826911 = bg.page("/eams/courseTableForStd!courseTable.action","");
+  {
+    var _paramstring = 'ignoreHead=1&setting.kind=std&startWeek=&semester.id=242&ids=206271';
+    var _params = _paramstring.split('&');
+    for (var i = 0; i < _params.length; i++) {
+      _params[i] = decodeURIComponent(_params[i]);
+    }
+    _paramstring = _params.join('&');
+    page_grid12042826911.target("",'grid12042826911').action("/eams/courseTableForStd!courseTable.action").addParams(_paramstring).orderBy("null");
+  }
+  bg.ui.grid.init('grid12042826911',page_grid12042826911);
+</script>
+   		<br>
+<strong>实验安排:</strong>
+<table class="gridtable">
+	<thead class="gridhead">
+		<th>课程序号</th>
+		<th>课程名称</th>
+		<th>实验分组</th>
+		<th>实验项目</th>
+		<th>实验辅导老师</th>
+	</thead>
+	<tbody>
+		<tr class="griddata-even">
+			<td>27XK1103.03</td>
+			<td>矿物学与岩石学基础</td>
+			<td>组</td>
+			<td>常见造岩矿物鉴定（2）哲</td>
+			<td>夏明哲</td>
+		</tr>
+		<tr class="griddata-odd">
+			<td>27XK1103.03</td>
+			<td>矿物学与岩石学基础</td>
+			<td>组</td>
+			<td>常见造岩矿物鉴定（2）哲</td>
+			<td>夏明哲</td>
+		</tr>
+		<tr class="griddata-even">
+			<td>27XK1103.03</td>
+			<td>矿物学与岩石学基础</td>
+			<td>组</td>
+			<td>喷出岩类哲</td>
+			<td>夏明哲</td>
+		</tr>
+		<tr class="griddata-odd">
+			<td>27XK1103.03</td>
+			<td>矿物学与岩石学基础</td>
+			<td>组</td>
+			<td>侵入岩类哲</td>
+			<td>夏明哲</td>
+		</tr>
+		<tr class="griddata-even">
+			<td>27XK1103.03</td>
+			<td>矿物学与岩石学基础</td>
+			<td>组</td>
+			<td>内源沉积岩类</td>
+			<td>夏明哲</td>
+		</tr>
+		<tr class="griddata-odd">
+			<td>27XK1103.03</td>
+			<td>矿物学与岩石学基础</td>
+			<td>组</td>
+			<td>陆源碎屑岩类 哲</td>
+			<td>夏明哲</td>
+		</tr>
+		<tr class="griddata-even">
+			<td>27XK1103.03</td>
+			<td>矿物学与岩石学基础</td>
+			<td>组</td>
+			<td>常见变质岩（2）哲</td>
+			<td>夏明哲</td>
+		</tr>
+		<tr class="griddata-odd">
+			<td>27XK1103.03</td>
+			<td>矿物学与岩石学基础</td>
+			<td>组</td>
+			<td>常见变质岩（1）哲</td>
+			<td>夏明哲</td>
+		</tr>
+	</tbody>
+</table>
+   		    
+   		<br>
