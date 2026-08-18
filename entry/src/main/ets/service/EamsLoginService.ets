@@ -260,8 +260,6 @@ export class EamsLoginService {
       // 登录成功，但需要确保拿到教务系统的 JSESSIONID
       // 如果自动重定向已经到达 eams，Cookie 应该已经在响应中
       Logger.info(TAG, Logger.formatMsg(TAG, 'submitLogin', '✅ 登录成功'));
-      Logger.info(TAG, Logger.formatMsg(TAG, 'submitLogin',
-        `Cookies: ${this.buildCookieHeader()}`));
 
       // 额外访问一次教务系统首页，确保 Session 建立
       await this.ensureEamsSession();
@@ -357,9 +355,6 @@ export class EamsLoginService {
    * 步骤 3：获取学生 ids
    */
   private async getStudentIds(): Promise<string | null> {
-    Logger.info(TAG, Logger.formatMsg(TAG, 'getStudentIds',
-      `携带 Cookie: ${this.buildCookieHeader()}`));
-
     const httpRequest = http.createHttp();
     try {
       const response = await httpRequest.request(COURSE_TABLE_PAGE, {
@@ -416,7 +411,7 @@ export class EamsLoginService {
     if (semesterId) {
       return semesterId;
     }
-    // 默认值（2025-2026学年第2学期）
+    // 兜底值：cookie 缺失时使用，实际以教务系统当前学期为准
     return '262';
   }
 

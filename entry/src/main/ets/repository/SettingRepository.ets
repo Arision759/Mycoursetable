@@ -115,6 +115,48 @@ export class SettingRepository {
   }
 
   /**
+   * 读取字符串配置
+   */
+  public async getString(key: string, defaultValue: string = ''): Promise<Result<string>> {
+    return await this.prefsManager.getString(key, defaultValue);
+  }
+
+  /**
+   * 保存字符串配置
+   */
+  public async putString(key: string, value: string): Promise<Result<void>> {
+    return await this.prefsManager.putString(key, value);
+  }
+
+  /**
+   * 读取布尔配置
+   */
+  public async getBoolean(key: string, defaultValue: boolean = false): Promise<Result<boolean>> {
+    return await this.prefsManager.getBoolean(key, defaultValue);
+  }
+
+  /**
+   * 保存布尔配置
+   */
+  public async putBoolean(key: string, value: boolean): Promise<Result<void>> {
+    return await this.prefsManager.putBoolean(key, value);
+  }
+
+  /**
+   * 读取数字配置
+   */
+  public async getNumber(key: string, defaultValue: number = 0): Promise<Result<number>> {
+    return await this.prefsManager.getNumber(key, defaultValue);
+  }
+
+  /**
+   * 保存数字配置
+   */
+  public async putNumber(key: string, value: number): Promise<Result<void>> {
+    return await this.prefsManager.putNumber(key, value);
+  }
+
+  /**
    * 清除所有设置
    */
   public async clearAll(): Promise<Result<void>> {

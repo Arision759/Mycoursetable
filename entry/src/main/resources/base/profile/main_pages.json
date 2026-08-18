@@ -1,5 +1,6 @@
 {
   "src": [
+    "pages/PrivacyPage",
     "pages/Index",
     "pages/WeekSchedulePage",
     "pages/ImportPage",

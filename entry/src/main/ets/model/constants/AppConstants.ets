@@ -40,6 +40,12 @@ export class PrefsKey {
 
   /** 是否首次启动 */
   public static readonly IS_FIRST_LAUNCH: string = 'is_first_launch';
+
+  /** 桌面下节课提醒是否启用 */
+  public static readonly DESKTOP_REMINDER_ENABLED: string = 'desktop_reminder_enabled';
+
+  /** 桌面下节课提醒提前时间（分钟） */
+  public static readonly DESKTOP_REMINDER_ADVANCE_MINUTES: string = 'desktop_reminder_advance_minutes';
 }
 
 /**

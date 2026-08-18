@@ -38,16 +38,16 @@ struct ImportPage {
         controller: this.controller
       })
         .javaScriptAccess(true)
-        .domStorageAccess(true)
-        .mixedMode(MixedMode.All)
-        .cacheMode(CacheMode.Default)
+        .domStorageAccess(false)
+        .mixedMode(MixedMode.None)
+        .cacheMode(CacheMode.None)
         .onPageEnd((event) => {
           if (event) {
             this.pageLoaded = true;
             const url = event.url || '';
             Logger.info(
               'ImportPage',
-              Logger.formatMsg('ImportPage', 'onPageEnd', `页面加载完成: ${url}`)
+              Logger.formatMsg('ImportPage', 'onPageEnd', `页面加载完成: ${url.split('?')[0]}`)
             );
 
             // 判断当前页面类型并执行对应操作
@@ -68,7 +68,7 @@ struct ImportPage {
               Logger.formatMsg(
                 'ImportPage',
                 'onErrorReceive',
-                `WebView 错误: code=${errorCode}, info=${errorInfo}, url=${requestUrl}, mainFrame=${isMainFrame}`
+                `WebView 错误: code=${errorCode}, info=${errorInfo}, url=${requestUrl.split('?')[0]}, mainFrame=${isMainFrame}`
               )
             );
 
@@ -127,26 +127,18 @@ struct ImportPage {
         .backgroundColor(Color.White)
       }
 
-      // 解析失败诊断信息
+      // 解析失败提示
       if (this.debugInfo.length > 0) {
         Column() {
-          Text('未找到课程信息，请把下面的 HTML 样例发给开发者')
-            .fontSize(16)
+          Text('课程表解析失败')
+            .fontSize(18)
             .fontWeight(FontWeight.Bold)
             .margin({ bottom: 12 })
 
-          Scroll() {
-            Text(this.debugInfo)
-              .fontSize(12)
-              .textAlign(TextAlign.Start)
-              .lineHeight(18)
-          }
-          .width('100%')
-          .layoutWeight(1)
-          .backgroundColor('#F5F6F8')
-          .borderRadius(6)
-          .padding(10)
-          .scrollBar(BarState.Auto)
+          Text(this.debugInfo)
+            .fontSize(15)
+            .textAlign(TextAlign.Start)
+            .lineHeight(22)
 
           Button('关闭')
             .width('100%')
@@ -430,29 +422,19 @@ struct ImportPage {
   }
 
   /**
-   * 解析失败时，把真实 HTML 样例展示在页面里，便于排查正则匹配问题
+   * 解析失败时仅展示可理解的提示，不暴露真实 HTML 和可能包含会话信息的 URL。
    */
   private showParseDiagnostic(html: string, url: string = ''): void {
-    const tdSamples = html.match(/<td[^>]*\btitle\s*=[^>]*>/gi);
-    let sample: string;
-    if (tdSamples && tdSamples.length > 0) {
-      sample = tdSamples.slice(0, 8).join('\n');
-    } else {
-      // 展示 body 内容（比 head 更有诊断价值），并统计关键元素数量
-      const bodyMatch = html.match(/<body[^>]*>([\s\S]*?)<\/body>/i);
-      const bodyHtml = bodyMatch ? bodyMatch[1] : html;
-      const tdCount = (html.match(/<td\b/gi) || []).length;
-      const iframeCount = (html.match(/<iframe\b/gi) || []).length;
-      const frameCount = (html.match(/<frame\b/gi) || []).length;
-      sample = `td 数量：${tdCount}，iframe 数量：${iframeCount}，frame 数量：${frameCount}\n\n` +
-        (bodyHtml.length > 1000 ? bodyHtml.substring(0, 1000) : bodyHtml);
-    }
+    const safeUrl = url.split('?')[0];
+    const tdCount = (html.match(/<td\b/gi) || []).length;
+    const iframeCount = (html.match(/<iframe\b/gi) || []).length;
+    const frameCount = (html.match(/<frame\b/gi) || []).length;
 
     this.isLoading = false;
-    this.debugInfo = `当前页面：${url}\n\n${sample}`;
+    this.debugInfo = '未能识别课程表。请确认已登录教务系统并进入课程表页面后重试。';
     Logger.warn(
       'ImportPage',
-      Logger.formatMsg('ImportPage', 'showParseDiagnostic', `解析失败，当前页面：${url}，HTML 样例：${sample.substring(0, 500)}`)
+      Logger.formatMsg('ImportPage', 'showParseDiagnostic', `解析失败，页面：${safeUrl}，td=${tdCount}，iframe=${iframeCount}，frame=${frameCount}`)
     );
   }
 

@@ -44,8 +44,8 @@ export class RdbManager {
 
       const config: relationalStore.StoreConfig = {
         name: DbConstants.DB_NAME,
-        securityLevel: relationalStore.SecurityLevel.S1,
-        encrypt: false
+        securityLevel: relationalStore.SecurityLevel.S3,
+        encrypt: true
       };
 
       this.rdbStore = await relationalStore.getRdbStore(context, config);

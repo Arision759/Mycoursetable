@@ -12,9 +12,7 @@ import { CourseDetailDialog } from '../components/CourseDetailDialog';
 import { CourseDetailItem } from '../viewmodel/CourseDetailItem';
 import { TimeTableParser } from '../utils/TimeTableParser';
 import router from '@ohos.router';
-import { ScheduleService } from '../service/ScheduleService';
 import { TermService } from '../service/TermService';
-import { CourseEntity } from '../model/entity/CourseEntity';
 import { DateUtil } from '../common/util/DateUtil';
 
 @Entry
@@ -43,9 +41,6 @@ struct WeekSchedulePage {
 
   async aboutToAppear() {
     Logger.info('WeekSchedulePage', Logger.formatMsg('WeekSchedulePage', 'aboutToAppear', '页面初始化'));
-
-    // ✅ 临时注释掉，避免干扰真实导入测试
-    // await this.insertTestData();
 
     // 1. 生成时间轴标签
     this.sectionLabels = this.viewModel.generateSectionLabels();
@@ -174,149 +169,6 @@ struct WeekSchedulePage {
     if (this.currentWeek < 20) {
       this.currentWeek++;
       await this.loadWeek(this.currentWeek);
-    }
-  }
-
-  /**
-   * 临时：插入测试数据
-   */
-  private async insertTestData() {
-    try {
-      const scheduleService = ScheduleService.getInstance();
-
-      // 检查是否已有数据
-      const termResult = await TermService.getInstance().getCurrentTerm();
-      if (!termResult.isSuccess() || !termResult.getData()) {
-        Logger.error('WeekSchedulePage', Logger.formatMsg('WeekSchedulePage', 'insertTestData', '未找到学期数据'));
-        return;
-      }
-
-      const termId = termResult.getData()!.id;
-
-      // 插入测试课程
-      const testCourses: CourseEntity[] = [];
-
-      const course1 = new CourseEntity();
-      course1.termId = termId;
-      course1.name = '高等数学Ⅱ';
-      course1.teacher = '韩少锋';
-      course1.dayOfWeek = 1;
-      course1.startSection = 3;
-      course1.endSection = 4;
-      course1.startTime = '10:25';
-      course1.endTime = '12:00';
-      course1.startWeek = 1;
-      course1.endWeek = 16;
-      course1.location = '明远楼 WH1102';
-      course1.color = '#FF6B9D';
-      course1.weekType = 0;
-      course1.sourceType = 0;
-      course1.createdAt = Date.now();
-      course1.updatedAt = Date.now();
-      testCourses.push(course1);
-
-      const course2 = new CourseEntity();
-      course2.termId = termId;
-      course2.name = '大学英语';
-      course2.teacher = '王娟';
-      course2.dayOfWeek = 1;
-      course2.startSection = 1;
-      course2.endSection = 2;
-      course2.startTime = '08:30';
-      course2.endTime = '10:05';
-      course2.startWeek = 1;
-      course2.endWeek = 16;
-      course2.location = '唐韵楼 TH1014';
-      course2.color = '#6BB6FF';
-      course2.weekType = 0;
-      course2.sourceType = 0;
-      course2.createdAt = Date.now();
-      course2.updatedAt = Date.now();
-      testCourses.push(course2);
-
-      const course3 = new CourseEntity();
-      course3.termId = termId;
-      course3.name = '数据结构';
-      course3.teacher = '李耀,丁明海';
-      course3.dayOfWeek = 2;
-      course3.startSection = 3;
-      course3.endSection = 4;
-      course3.startTime = '10:25';
-      course3.endTime = '12:00';
-      course3.startWeek = 1;
-      course3.endWeek = 16;
-      course3.location = '明远楼 WH1403';
-      course3.color = '#FFA36C';
-      course3.weekType = 0;
-      course3.sourceType = 0;
-      course3.createdAt = Date.now();
-      course3.updatedAt = Date.now();
-      testCourses.push(course3);
-
-      const course4 = new CourseEntity();
-      course4.termId = termId;
-      course4.name = '大学物理';
-      course4.teacher = '张教授';
-      course4.dayOfWeek = 3;
-      course4.startSection = 5;
-      course4.endSection = 6;
-      course4.startTime = '14:00';
-      course4.endTime = '15:35';
-      course4.startWeek = 1;
-      course4.endWeek = 16;
-      course4.location = '明远楼 WH2201';
-      course4.color = '#6BCF7F';
-      course4.weekType = 0;
-      course4.sourceType = 0;
-      course4.createdAt = Date.now();
-      course4.updatedAt = Date.now();
-      testCourses.push(course4);
-
-      const course5 = new CourseEntity();
-      course5.termId = termId;
-      course5.name = '体育';
-      course5.teacher = '刘教练';
-      course5.dayOfWeek = 4;
-      course5.startSection = 5;
-      course5.endSection = 6;
-      course5.startTime = '14:00';
-      course5.endTime = '15:35';
-      course5.startWeek = 1;
-      course5.endWeek = 16;
-      course5.location = '体育馆 操场';
-      course5.color = '#A78BFA';
-      course5.weekType = 0;
-      course5.sourceType = 0;
-      course5.createdAt = Date.now();
-      course5.updatedAt = Date.now();
-      testCourses.push(course5);
-
-      const course6 = new CourseEntity();
-      course6.termId = termId;
-      course6.name = '计算机网络';
-      course6.teacher = '王老师';
-      course6.dayOfWeek = 5;
-      course6.startSection = 1;
-      course6.endSection = 2;
-      course6.startTime = '08:30';
-      course6.endTime = '10:05';
-      course6.startWeek = 1;
-      course6.endWeek = 16;
-      course6.location = '明远楼 WH1501';
-      course6.color = '#FB7185';
-      course6.weekType = 0;
-      course6.sourceType = 0;
-      course6.createdAt = Date.now();
-      course6.updatedAt = Date.now();
-      testCourses.push(course6);
-
-      for (const course of testCourses) {
-        await scheduleService.insertCourse(course);
-      }
-
-      Logger.info('WeekSchedulePage', Logger.formatMsg('WeekSchedulePage', 'insertTestData', '测试数据插入完成'));
-    } catch (err) {
-      Logger.error('WeekSchedulePage', Logger.formatMsg('WeekSchedulePage', 'insertTestData', '插入测试数据失败: %{public}s'), JSON.stringify(err));
     }
   }
 
