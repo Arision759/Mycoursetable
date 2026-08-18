@@ -3,6 +3,7 @@
     "pages/Index",
     "pages/WeekSchedulePage",
     "pages/ImportPage",
-    "pages/LoginImportPage"
+    "pages/LoginImportPage",
+    "pages/SettingsPage"
   ]
 }

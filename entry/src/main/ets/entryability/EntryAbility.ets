@@ -83,11 +83,11 @@ export default class EntryAbility extends UIAbility {
   }
 
   /**
-   * 临时：创建或更新测试学期
+   * 初始化默认学期
    *
    * 设计原则：
-   * 1. 开学日期应该是真实的日期（不要为了显示课程而伪造）
-   * 2. 课程显示只依赖周次，不依赖日期
+   * 1. 只在数据库没有学期时创建默认值（首次安装）
+   * 2. 已存在学期时不覆盖，避免重置用户在设置页修改的开学日期/学期名称
    * 3. "当前周"只用于：页面初始化时跳转 + 高亮标记
    */
   private async createTestTerm(): Promise<void> {
@@ -96,40 +96,29 @@ export default class EntryAbility extends UIAbility {
 
       // 检查是否已有当前学期
       const existingResult = await termService.getCurrentTerm();
+      if (existingResult.isSuccess() && existingResult.getData()) {
+        // 已有学期（可能已被用户在设置页修改过），不再覆盖
+        Logger.info('EntryAbility', Logger.formatMsg('EntryAbility', 'createTestTerm', '学期已存在，跳过初始化'));
+        return;
+      }
 
       const term = new TermEntity();
       term.name = '2026-2027学年第1学期';
-      term.startDate = new Date('2026-09-01').getTime();  // 真实的开学日期：9月1日
+      term.startDate = new Date('2026-09-01').getTime();  // 默认开学日期：9月1日
       term.weekCount = 20;
       term.isCurrent = 1;
       term.createdAt = Date.now();
       term.updatedAt = Date.now();
 
-      if (existingResult.isSuccess() && existingResult.getData()) {
-        // 已有学期，更新它
-        const existing = existingResult.getData()!;
-        term.id = existing.id;
-        term.createdAt = existing.createdAt;
-
-        const updateResult = await termService.updateTerm(term);
-        if (updateResult.isSuccess()) {
-          Logger.info('EntryAbility', Logger.formatMsg('EntryAbility', 'createTestTerm', '测试学期更新成功'));
-        } else {
-          Logger.error('EntryAbility', Logger.formatMsg('EntryAbility', 'createTestTerm', '更新学期失败: %{public}s'),
-            updateResult.getError().message);
-        }
+      const result = await termService.createTerm(term);
+      if (result.isSuccess()) {
+        Logger.info('EntryAbility', Logger.formatMsg('EntryAbility', 'createTestTerm', '默认学期创建成功'));
       } else {
-        // 没有学期，创建新的
-        const result = await termService.createTerm(term);
-        if (result.isSuccess()) {
-          Logger.info('EntryAbility', Logger.formatMsg('EntryAbility', 'createTestTerm', '测试学期创建成功'));
-        } else {
-          Logger.error('EntryAbility', Logger.formatMsg('EntryAbility', 'createTestTerm', '创建学期失败: %{public}s'),
-            result.getError().message);
-        }
+        Logger.error('EntryAbility', Logger.formatMsg('EntryAbility', 'createTestTerm', '创建学期失败: %{public}s'),
+          result.getError().message);
       }
     } catch (err) {
-      Logger.error('EntryAbility', Logger.formatMsg('EntryAbility', 'createTestTerm', '创建测试学期异常: %{public}s'),
+      Logger.error('EntryAbility', Logger.formatMsg('EntryAbility', 'createTestTerm', '创建默认学期异常: %{public}s'),
         JSON.stringify(err));
     }
   }

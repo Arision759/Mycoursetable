@@ -15,6 +15,7 @@ import router from '@ohos.router';
 import { ScheduleService } from '../service/ScheduleService';
 import { TermService } from '../service/TermService';
 import { CourseEntity } from '../model/entity/CourseEntity';
+import { DateUtil } from '../common/util/DateUtil';
 
 @Entry
 @ComponentV2
@@ -27,8 +28,11 @@ struct WeekSchedulePage {
   @Local sectionLabels: SectionLabel[] = [];
   @Local currentWeek: number = 1;
   @Local weekDateRange: string = '';
+  @Local termName: string = '';
+  @Local dayDates: string[] = [];
   @Local isLoading: boolean = true;
   private dialogController: CustomDialogController | null = null;
+  private hasShown: boolean = false;
 
   // 布局常量
   private readonly SECTION_HEIGHT = ScheduleConstants.SECTION_HEIGHT;
@@ -80,7 +84,66 @@ struct WeekSchedulePage {
     // 获取日期范围
     this.weekDateRange = await this.viewModel.getWeekDateRange(week);
 
+    // 刷新学期名和每天对应的日期
+    await this.updateTermName();
+    await this.updateDayDates(week);
+
     this.isLoading = false;
+  }
+
+  /**
+   * 页面重新显示时触发（含从设置页返回）
+   * 开学日期/学期可能在设置页被修改，需要刷新
+   */
+  onPageShow() {
+    // 首次显示由 aboutToAppear 负责加载，这里只处理从其他页面返回的刷新
+    if (this.hasShown) {
+      this.refreshAll();
+    }
+    this.hasShown = true;
+  }
+
+  /**
+   * 从设置页返回后刷新全部数据
+   */
+  private async refreshAll() {
+    Logger.info('WeekSchedulePage', Logger.formatMsg('WeekSchedulePage', 'refreshAll', '设置可能已变更，刷新页面'));
+
+    // 重新计算当前周（开学日期可能已修改）
+    const currentWeek = await this.viewModel.getCurrentWeek();
+    this.currentWeek = currentWeek > 0 ? currentWeek : 1;
+
+    await this.loadWeek(this.currentWeek);
+  }
+
+  /**
+   * 更新学期名称（左上角小字显示）
+   */
+  private async updateTermName() {
+    const result = await TermService.getInstance().getCurrentTerm();
+    if (result.isSuccess() && result.getData()) {
+      this.termName = result.getData()!.name;
+    }
+  }
+
+  /**
+   * 计算当前显示周每天对应的日期（如 9.1）
+   */
+  private async updateDayDates(week: number) {
+    const result = await TermService.getInstance().getCurrentTerm();
+    if (!result.isSuccess() || !result.getData()) {
+      this.dayDates = [];
+      return;
+    }
+
+    const startDate = result.getData()!.startDate;
+    const dates: string[] = [];
+    for (let d = 1; d <= 7; d++) {
+      const ts = DateUtil.getDateByWeekAndDay(startDate, week, d);
+      const dt = new Date(ts);
+      dates.push(`${dt.getMonth() + 1}.${dt.getDate()}`);
+    }
+    this.dayDates = dates;
   }
 
   /**
@@ -329,6 +392,14 @@ struct WeekSchedulePage {
   @Builder
   buildTopBar() {
     Row() {
+      // 左上角：学期名称（小字显示）
+      Text(this.termName)
+        .fontSize(10)
+        .fontColor('#999999')
+        .maxLines(1)
+        .textOverflow({ overflow: TextOverflow.Ellipsis })
+        .constraintSize({ maxWidth: 120 })
+
       // 上一周按钮
       Button('◀')
         .fontSize(20)
@@ -363,8 +434,8 @@ struct WeekSchedulePage {
         .fontSize(20)
         .backgroundColor(Color.Transparent)
         .onClick(() => {
-          // TODO: 跳转设置页面
-          Logger.info('WeekSchedulePage', Logger.formatMsg('WeekSchedulePage', 'onClick', '打开设置'));
+          Logger.info('WeekSchedulePage', Logger.formatMsg('WeekSchedulePage', 'onClick', '打开设置页面'));
+          router.pushUrl({ url: 'pages/SettingsPage' });
         })
     }
     .width('100%')
@@ -374,7 +445,7 @@ struct WeekSchedulePage {
   }
 
   /**
-   * 日期行：周一到周日
+   * 日期行：周一到周日（下方显示该周对应的日期，如 9.1）
    */
   @Builder
   buildDateRow() {
@@ -385,15 +456,23 @@ struct WeekSchedulePage {
 
       // 周一到周日
       ForEach(['一', '二', '三', '四', '五', '六', '日'], (day: string, index: number) => {
-        Text(day)
-          .fontSize(14)
-          .fontColor('#666666')
-          .textAlign(TextAlign.Center)
-          .layoutWeight(1)
+        Column({ space: 2 }) {
+          Text(day)
+            .fontSize(14)
+            .fontColor('#666666')
+
+          if (this.dayDates.length === 7) {
+            Text(this.dayDates[index])
+              .fontSize(10)
+              .fontColor('#999999')
+          }
+        }
+        .layoutWeight(1)
+        .justifyContent(FlexAlign.Center)
       })
     }
     .width('100%')
-    .height(40)
+    .height(52)
     .backgroundColor(Color.White)
   }
 
