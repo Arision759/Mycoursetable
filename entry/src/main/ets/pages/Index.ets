@@ -7,10 +7,10 @@ struct Index {
   async aboutToAppear() {
     Logger.info('Index', Logger.formatMsg('Index', 'aboutToAppear', '应用启动'));
 
-    // 跳转到登录导入页面
+    // 跳转到周课表主页（不再强制登录，导入由用户点击导入按钮触发）
     setTimeout(() => {
       router.replaceUrl({
-        url: 'pages/LoginImportPage'
+        url: 'pages/WeekSchedulePage'
       });
     }, 1000);
   }

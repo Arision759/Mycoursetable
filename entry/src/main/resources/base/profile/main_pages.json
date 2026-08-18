@@ -4,6 +4,7 @@
     "pages/WeekSchedulePage",
     "pages/ImportPage",
     "pages/LoginImportPage",
-    "pages/SettingsPage"
+    "pages/SettingsPage",
+    "pages/SchoolSelectPage"
   ]
 }

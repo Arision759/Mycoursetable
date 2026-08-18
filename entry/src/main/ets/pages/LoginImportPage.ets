@@ -11,6 +11,11 @@ import router from '@ohos.router';
 
 const TAG = 'LoginImportPage';
 
+// 路由参数（学校选择页传入）
+class LoginRouteParams {
+  schoolName: string = '';
+}
+
 @Entry
 @Component
 struct LoginImportPage {
@@ -19,6 +24,19 @@ struct LoginImportPage {
   @State isLoading: boolean = false;
   @State statusText: string = '';
   @State errorText: string = '';
+  @State schoolName: string = '长安大学';
+
+  aboutToAppear() {
+    // 读取学校选择页传入的学校名
+    try {
+      const params = router.getParams() as LoginRouteParams;
+      if (params && params.schoolName.length > 0) {
+        this.schoolName = params.schoolName;
+      }
+    } catch (err) {
+      // 无参数时使用默认学校名
+    }
+  }
 
   build() {
     Column() {
@@ -31,7 +49,7 @@ struct LoginImportPage {
         .fontWeight(FontWeight.Bold)
         .margin({ bottom: 8 })
 
-      Text('长安大学教务系统')
+      Text(`${this.schoolName}教务系统`)
         .fontSize(14)
         .fontColor('#999999')
         .margin({ bottom: 48 })
@@ -197,9 +215,9 @@ struct LoginImportPage {
       Logger.info(TAG, Logger.formatMsg(TAG, 'startImport',
         `✅ 导入成功，共 ${courses.length} 门课程`));
 
-      // 延迟跳转到课表页
+      // 延迟返回课表主页（返回已有页面，触发 onPageShow 自动刷新课程）
       setTimeout(() => {
-        router.replaceUrl({
+        router.back({
           url: 'pages/WeekSchedulePage'
         });
       }, 1500);

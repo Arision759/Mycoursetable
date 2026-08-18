@@ -28,7 +28,8 @@ struct WeekSchedulePage {
   @Local sectionLabels: SectionLabel[] = [];
   @Local currentWeek: number = 1;
   @Local weekDateRange: string = '';
-  @Local termName: string = '';
+  @Local termNameLine1: string = '';
+  @Local termNameLine2: string = '';
   @Local dayDates: string[] = [];
   @Local isLoading: boolean = true;
   private dialogController: CustomDialogController | null = null;
@@ -117,12 +118,22 @@ struct WeekSchedulePage {
   }
 
   /**
-   * 更新学期名称（左上角小字显示）
+   * 更新学期名称（左上角两行小字显示）
+   * 拆分规则："2026-2027学年第1学期" → "2026-2027" / "学年第1学期"
    */
   private async updateTermName() {
     const result = await TermService.getInstance().getCurrentTerm();
     if (result.isSuccess() && result.getData()) {
-      this.termName = result.getData()!.name;
+      const name = result.getData()!.name;
+      const idx = name.indexOf('学年');
+      if (idx > 0) {
+        this.termNameLine1 = name.substring(0, idx);
+        this.termNameLine2 = name.substring(idx);
+      } else {
+        // 名称中不含"学年"时退化为单行显示
+        this.termNameLine1 = name;
+        this.termNameLine2 = '';
+      }
     }
   }
 
@@ -392,13 +403,19 @@ struct WeekSchedulePage {
   @Builder
   buildTopBar() {
     Row() {
-      // 左上角：学期名称（小字显示）
-      Text(this.termName)
-        .fontSize(10)
-        .fontColor('#999999')
-        .maxLines(1)
-        .textOverflow({ overflow: TextOverflow.Ellipsis })
-        .constraintSize({ maxWidth: 120 })
+      // 左上角：学期名称（两行小字显示，如 2026-2027 / 学年第1学期）
+      Column({ space: 1 }) {
+        Text(this.termNameLine1)
+          .fontSize(10)
+          .fontColor('#999999')
+
+        if (this.termNameLine2.length > 0) {
+          Text(this.termNameLine2)
+            .fontSize(10)
+            .fontColor('#999999')
+        }
+      }
+      .alignItems(HorizontalAlign.Start)
 
       // 上一周按钮
       Button('◀')
@@ -428,6 +445,15 @@ struct WeekSchedulePage {
         .backgroundColor(Color.Transparent)
         .fontColor('#333333')
         .onClick(() => this.nextWeek())
+
+      // 导入按钮（点击后选择学校 → 登录导入课表）
+      Button('📥')
+        .fontSize(20)
+        .backgroundColor(Color.Transparent)
+        .onClick(() => {
+          Logger.info('WeekSchedulePage', Logger.formatMsg('WeekSchedulePage', 'onClick', '打开学校选择页'));
+          router.pushUrl({ url: 'pages/SchoolSelectPage' });
+        })
 
       // 设置按钮
       Button('⚙️')
