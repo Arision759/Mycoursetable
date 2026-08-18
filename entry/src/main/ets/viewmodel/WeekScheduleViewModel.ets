@@ -102,6 +102,8 @@ export class WeekScheduleViewModel {
       dayOfWeek: entity.dayOfWeek,
       startSection: entity.startSection,
       endSection: entity.endSection,
+      startWeek: entity.startWeek,
+      endWeek: entity.endWeek,
       color: entity.color,
       isCurrentWeek: isCurrentWeek
     };

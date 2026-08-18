@@ -13,6 +13,7 @@ export struct CourseDetailDialog {
     dayOfWeek: '',
     sectionRange: '',
     timeRange: '',
+    weekRange: '',
     classrooms: []
   };
 
@@ -41,6 +42,16 @@ export struct CourseDetailDialog {
             .width(30)
 
           Text(`${this.detail.dayOfWeek} ${this.detail.sectionRange}`)
+            .fontSize(15)
+        }
+        .width('100%')
+
+        Row() {
+          Text('📆')
+            .fontSize(16)
+            .width(30)
+
+          Text(`第${this.detail.weekRange}`)
             .fontSize(15)
         }
         .width('100%')

@@ -14,6 +14,8 @@ export struct CourseCard {
     dayOfWeek: 1,
     startSection: 1,
     endSection: 1,
+    startWeek: 1,
+    endWeek: 1,
     color: Color.Blue,
     isCurrentWeek: true
   };
@@ -29,21 +31,17 @@ export struct CourseCard {
         .maxLines(2)
         .textOverflow({ overflow: TextOverflow.Ellipsis })
 
-      // 教师
+      // 教师（自动换行，不截断）
       Text(this.course.teacher)
         .fontSize(11)
         .fontColor(Color.White)
         .opacity(0.85)
-        .maxLines(1)
-        .textOverflow({ overflow: TextOverflow.Ellipsis })
 
-      // 教室
+      // 教室（自动换行到下一个格子，显示完整信息）
       Text(this.course.room)
         .fontSize(10)
         .fontColor(Color.White)
         .opacity(0.7)
-        .maxLines(1)
-        .textOverflow({ overflow: TextOverflow.Ellipsis })
     }
     .width('100%')
     .height('100%')

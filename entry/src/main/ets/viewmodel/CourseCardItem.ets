@@ -10,6 +10,8 @@ export interface CourseCardItem {
   dayOfWeek: number;             // 星期几（1-7）
   startSection: number;          // 开始节次（1-12）
   endSection: number;            // 结束节次（1-12）
+  startWeek: number;             // 开始周次（1-20）
+  endWeek: number;               // 结束周次（1-20）
   color: ResourceColor;          // 卡片颜色
   isCurrentWeek: boolean;        // 是否本周课程
 }

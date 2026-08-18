@@ -273,6 +273,7 @@ struct WeekSchedulePage {
       dayOfWeek: this.getDayOfWeekText(course.dayOfWeek),
       sectionRange: `第${course.startSection}-${course.endSection}节`,
       timeRange: `${TimeTableParser.getStartTime(course.startSection)}-${TimeTableParser.getEndTime(course.endSection)}`,
+      weekRange: `${course.startWeek}-${course.endWeek}周`,
       classrooms: [course.room]
     };
 
