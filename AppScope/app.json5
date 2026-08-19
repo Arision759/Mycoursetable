@@ -1,7 +1,7 @@
 {
   "app": {
-    "bundleName": "com.example.cousertable",
-    "vendor": "example",
+    "bundleName": "com.wangyongshan.cousertable",
+    "vendor": "王永山",
     "versionCode": 1000000,
     "versionName": "1.0.0",
     "buildVersion": "1",

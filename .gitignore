@@ -35,3 +35,6 @@ local.properties
 *.p12
 *.jks
 *.keystore
+*.p7b
+*.cer
+KeyStore/
