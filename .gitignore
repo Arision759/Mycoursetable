@@ -4,6 +4,7 @@ build/
 */build/
 oh_modules/
 node_modules/
+.appanalyzer/
 
 # IDE 配置
 .idea/

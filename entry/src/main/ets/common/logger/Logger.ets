@@ -28,7 +28,7 @@ interface LogConfig {
 export class Logger {
   private static config: LogConfig = {
     domain: 0x0001, // 课程表应用域
-    enableDebug: true // 生产环境改为 false
+    enableDebug: false // 生产环境关闭调试日志
   };
 
   /**

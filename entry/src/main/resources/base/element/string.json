@@ -11,6 +11,22 @@
     {
       "name": "EntryAbility_label",
       "value": "长大课程表"
+    },
+    {
+      "name": "EntryFormAbility_desc",
+      "value": "显示下一节课程信息的桌面卡片"
+    },
+    {
+      "name": "EntryFormAbility_label",
+      "value": "下一节课"
+    },
+    {
+      "name": "widget_display_name",
+      "value": "下一节课"
+    },
+    {
+      "name": "widget_desc",
+      "value": "在桌面查看下一节课时间、教室和老师"
     }
   ]
 }

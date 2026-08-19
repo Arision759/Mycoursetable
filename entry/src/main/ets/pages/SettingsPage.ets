@@ -7,6 +7,7 @@
  */
 import { TermService } from '../service/TermService';
 import { SettingService } from '../service/SettingService';
+import { DesktopCardService } from '../service/DesktopCardService';
 import { Logger } from '../common/logger/Logger';
 import { DateUtil } from '../common/util/DateUtil';
 import router from '@ohos.router';
@@ -157,6 +158,18 @@ struct SettingsPage {
       if (!desktopAdvanceResult.isSuccess()) {
         promptAction.showToast({ message: '提醒时间保存失败，请重试' });
         return;
+      }
+
+      // 4. 保存成功后立即刷新桌面卡片，让开关效果实时生效
+      const hostContext = this.getUIContext().getHostContext();
+      if (hostContext) {
+        try {
+          await DesktopCardService.refreshAllCards(hostContext);
+        } catch (refreshError) {
+          Logger.error('SettingsPage',
+            Logger.formatMsg('SettingsPage', 'saveSettings', '刷新桌面卡片失败: %{public}s'),
+            JSON.stringify(refreshError));
+        }
       }
 
       Logger.info('SettingsPage',
