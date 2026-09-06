@@ -12,5 +12,5 @@ export class ScheduleConstants {
   // 颜色常量
   static readonly GRID_LINE_COLOR: string = '#E0E0E0'; // 网格线颜色
   static readonly CURRENT_DAY_BG: string = '#F5F9FF';  // 今日列背景色
-  static readonly NON_WEEK_OPACITY: number = 0.3;      // 非本周课程透明度
+  static readonly NON_WEEK_OPACITY: number = 0.55;     // 非本周课程透明度
 }

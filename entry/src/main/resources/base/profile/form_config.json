@@ -14,7 +14,7 @@
       "isDefault": true,
       "isDynamic": true,
       "updateEnabled": true,
-      "updateDuration": 0,
+      "updateDuration": 1,
       "supportDimensions": [
         "2*2"
       ],

@@ -22,35 +22,43 @@ export struct CourseCard {
   @Event onCardClick: (id: string) => void = () => {}; // 点击回调
 
   build() {
-    Column({ space: 2 }) {
-      // 课程名
-      Text(this.course.name)
-        .fontSize(13)
-        .fontWeight(FontWeight.Medium)
-        .fontColor(Color.White)
-        .maxLines(2)
-        .textOverflow({ overflow: TextOverflow.Ellipsis })
+    Stack({ alignContent: Alignment.TopStart }) {
+      // 背景层：非本周课程仅淡化背景色，文字层保持不透明以确保对比度
+      Column()
+        .width('100%')
+        .height('100%')
+        .backgroundColor(this.course.color)
+        .borderRadius(8)
+        .opacity(this.course.isCurrentWeek ? 1.0 : 0.55)
 
-      // 教师（自动换行，不截断）
-      Text(this.course.teacher)
-        .fontSize(11)
-        .fontColor(Color.White)
-        .opacity(0.85)
+      // 内容层
+      Column({ space: 2 }) {
+        // 课程名
+        Text(this.course.name)
+          .fontSize(13)
+          .fontWeight(FontWeight.Medium)
+          .fontColor($r('app.color.text_on_card'))
+          .maxLines(2)
+          .textOverflow({ overflow: TextOverflow.Ellipsis })
 
-      // 教室（自动换行到下一个格子，显示完整信息）
-      Text(this.course.room)
-        .fontSize(10)
-        .fontColor(Color.White)
-        .opacity(0.7)
+        // 教师（自动换行，不截断）
+        Text(this.course.teacher)
+          .fontSize(11)
+          .fontColor($r('app.color.text_on_card'))
+
+        // 教室（自动换行到下一个格子，显示完整信息）
+        Text(this.course.room)
+          .fontSize(10)
+          .fontColor($r('app.color.text_on_card'))
+      }
+      .width('100%')
+      .height('100%')
+      .padding(4)
+      .alignItems(HorizontalAlign.Start)
+      .justifyContent(FlexAlign.Start)
     }
     .width('100%')
     .height('100%')
-    .padding(4)
-    .alignItems(HorizontalAlign.Start)
-    .justifyContent(FlexAlign.Start)
-    .backgroundColor(this.course.color)
-    .borderRadius(8)
-    .opacity(this.course.isCurrentWeek ? 1.0 : 0.3) // 非本周课程半透明
     .onClick(() => {
       this.onCardClick(this.course.id); // 触发点击回调
     })

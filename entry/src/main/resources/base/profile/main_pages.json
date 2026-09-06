@@ -1,11 +1,11 @@
 {
   "src": [
-    "pages/PrivacyPage",
     "pages/Index",
     "pages/WeekSchedulePage",
     "pages/ImportPage",
     "pages/LoginImportPage",
     "pages/SettingsPage",
-    "pages/SchoolSelectPage"
+    "pages/SchoolSelectPage",
+    "pages/AboutPage"
   ]
 }

@@ -3,6 +3,54 @@
     {
       "name": "start_window_background",
       "value": "#000000"
+    },
+    {
+      "name": "page_bg",
+      "value": "#111111"
+    },
+    {
+      "name": "card_bg",
+      "value": "#1C1C1E"
+    },
+    {
+      "name": "title_bar_bg",
+      "value": "#1C1C1E"
+    },
+    {
+      "name": "text_heading",
+      "value": "#E6FFFFFF"
+    },
+    {
+      "name": "text_primary",
+      "value": "#E6FFFFFF"
+    },
+    {
+      "name": "text_secondary",
+      "value": "#99FFFFFF"
+    },
+    {
+      "name": "divider_color",
+      "value": "#333333"
+    },
+    {
+      "name": "grid_cell_bg",
+      "value": "#2C2C2E"
+    },
+    {
+      "name": "accent",
+      "value": "#5C9EFF"
+    },
+    {
+      "name": "accent_bg",
+      "value": "#1A3A5C"
+    },
+    {
+      "name": "input_bg",
+      "value": "#2C2C2E"
+    },
+    {
+      "name": "text_on_card",
+      "value": "#1F1F1F"
     }
   ]
 }

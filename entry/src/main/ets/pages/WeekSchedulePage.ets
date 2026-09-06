@@ -246,7 +246,7 @@ struct WeekSchedulePage {
     }
     .width('100%')
     .height('100%')
-    .backgroundColor('#F5F5F5')
+    .backgroundColor($r('app.color.page_bg'))
   }
 
   /**
@@ -259,12 +259,12 @@ struct WeekSchedulePage {
       Column({ space: 1 }) {
         Text(this.termNameLine1)
           .fontSize(10)
-          .fontColor('#999999')
+          .fontColor($r('app.color.text_secondary'))
 
         if (this.termNameLine2.length > 0) {
           Text(this.termNameLine2)
             .fontSize(10)
-            .fontColor('#999999')
+            .fontColor($r('app.color.text_secondary'))
         }
       }
       .alignItems(HorizontalAlign.Start)
@@ -273,7 +273,7 @@ struct WeekSchedulePage {
       Button('◀')
         .fontSize(20)
         .backgroundColor(Color.Transparent)
-        .fontColor('#333333')
+        .fontColor($r('app.color.text_primary'))
         .onClick(() => this.previousWeek())
 
       // 周次信息
@@ -285,7 +285,7 @@ struct WeekSchedulePage {
         if (this.weekDateRange) {
           Text(this.weekDateRange)
             .fontSize(12)
-            .fontColor('#666666')
+            .fontColor($r('app.color.text_secondary'))
         }
       }
       .layoutWeight(1)
@@ -295,7 +295,7 @@ struct WeekSchedulePage {
       Button('▶')
         .fontSize(20)
         .backgroundColor(Color.Transparent)
-        .fontColor('#333333')
+        .fontColor($r('app.color.text_primary'))
         .onClick(() => this.nextWeek())
 
       // 导入按钮（点击后选择学校 → 登录导入课表）
@@ -319,7 +319,7 @@ struct WeekSchedulePage {
     .width('100%')
     .height(56)
     .padding({ left: 16, right: 16 })
-    .backgroundColor(Color.White)
+    .backgroundColor($r('app.color.card_bg'))
   }
 
   /**
@@ -337,12 +337,12 @@ struct WeekSchedulePage {
         Column({ space: 2 }) {
           Text(day)
             .fontSize(14)
-            .fontColor('#666666')
+            .fontColor($r('app.color.text_secondary'))
 
           if (this.dayDates.length === 7) {
             Text(this.dayDates[index])
               .fontSize(10)
-              .fontColor('#999999')
+              .fontColor($r('app.color.text_secondary'))
           }
         }
         .layoutWeight(1)
@@ -351,7 +351,7 @@ struct WeekSchedulePage {
     }
     .width('100%')
     .height(52)
-    .backgroundColor(Color.White)
+    .backgroundColor($r('app.color.card_bg'))
   }
 
   /**
@@ -367,11 +367,11 @@ struct WeekSchedulePage {
             Column() {
               Text(label.section.toString())
                 .fontSize(12)
-                .fontColor('#999999')
+                .fontColor($r('app.color.text_secondary'))
 
               Text(label.startTime)
                 .fontSize(10)
-                .fontColor('#CCCCCC')
+                .fontColor($r('app.color.text_secondary'))
             }
             .width(ScheduleConstants.TIME_COLUMN_WIDTH)
             .height(this.SECTION_HEIGHT)
@@ -389,7 +389,7 @@ struct WeekSchedulePage {
                   Column()
                     .layoutWeight(1)
                     .height(this.SECTION_HEIGHT)
-                    .backgroundColor('#FAFAFA')
+                    .backgroundColor($r('app.color.grid_cell_bg'))
                     .borderRadius(4)
                 })
               }
@@ -420,6 +420,7 @@ struct WeekSchedulePage {
       .padding({ left: 8, right: 8, bottom: 16 })
     }
     .scrollBar(BarState.Auto)
+    .edgeEffect(EdgeEffect.Spring)
     .width('100%')
     .layoutWeight(1)
   }

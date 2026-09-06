@@ -91,8 +91,8 @@ struct ImportPage {
             .height(44)
             .fontSize(16)
             .fontWeight(FontWeight.Bold)
-            .backgroundColor('#007DFF')
-            .fontColor(Color.White)
+            .backgroundColor($r('app.color.accent'))
+            .fontColor($r('app.color.card_bg'))
             .borderRadius(22)
             .shadow({ radius: 8, color: '#33007DFF' })
             .onClick(() => {
@@ -115,7 +115,7 @@ struct ImportPage {
           LoadingProgress()
             .width(50)
             .height(50)
-            .color('#007DFF')
+            .color($r('app.color.accent'))
 
           Text(this.loadingText)
             .fontSize(16)
@@ -124,7 +124,7 @@ struct ImportPage {
         .width('100%')
         .height('100%')
         .justifyContent(FlexAlign.Center)
-        .backgroundColor(Color.White)
+        .backgroundColor($r('app.color.card_bg'))
       }
 
       // 解析失败提示
@@ -150,7 +150,7 @@ struct ImportPage {
         .width('92%')
         .height('84%')
         .padding(16)
-        .backgroundColor(Color.White)
+        .backgroundColor($r('app.color.card_bg'))
         .borderRadius(10)
         .shadow({ radius: 20, color: '#33000000' })
       }

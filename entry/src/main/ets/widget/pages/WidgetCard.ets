@@ -28,13 +28,13 @@ struct WidgetCard {
         Text(this.title)
           .fontSize(12)
           .fontWeight(FontWeight.Medium)
-          .fontColor('#8C8C8C')
+          .fontColor($r('app.color.text_secondary'))
 
         if (this.reminderEnabled && this.message.length === 0) {
           Text(this.courseName.length > 0 ? this.courseName : '未填写课程名称')
             .fontSize(16)
             .fontWeight(FontWeight.Bold)
-            .fontColor('#1F1F1F')
+            .fontColor($r('app.color.text_heading'))
             .maxLines(1)
             .textOverflow({ overflow: TextOverflow.Ellipsis })
             .margin({ top: 2 })
@@ -45,7 +45,7 @@ struct WidgetCard {
         } else {
           Text(this.message.length > 0 ? this.message : '--')
             .fontSize(13)
-            .fontColor('#666666')
+            .fontColor($r('app.color.text_secondary'))
             .margin({ top: 4 })
         }
       }
@@ -53,7 +53,7 @@ struct WidgetCard {
       .padding(12)
       .alignItems(HorizontalAlign.Start)
       .justifyContent(FlexAlign.Center)
-      .backgroundColor(Color.White)
+      .backgroundColor($r('app.color.card_bg'))
       .borderRadius(12)
     }
     .width('100%')
@@ -67,11 +67,11 @@ struct WidgetCard {
     Row({ space: 6 }) {
       Text(`${label} `)
         .fontSize(12)
-        .fontColor('#8C8C8C')
+        .fontColor($r('app.color.text_secondary'))
 
       Text(value)
         .fontSize(12)
-        .fontColor('#1F1F1F')
+        .fontColor($r('app.color.text_heading'))
         .maxLines(1)
         .textOverflow({ overflow: TextOverflow.Ellipsis })
     }

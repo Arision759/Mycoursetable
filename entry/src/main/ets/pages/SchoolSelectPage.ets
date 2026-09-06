@@ -66,7 +66,7 @@ struct SchoolSelectPage {
         Button('←')
           .fontSize(20)
           .backgroundColor(Color.Transparent)
-          .fontColor('#333333')
+          .fontColor($r('app.color.text_primary'))
           .onClick(() => {
             router.back();
           })
@@ -84,15 +84,16 @@ struct SchoolSelectPage {
       .width('100%')
       .height(56)
       .padding({ left: 16, right: 16 })
-      .backgroundColor(Color.White)
+      .backgroundColor($r('app.color.card_bg'))
 
       // 搜索框
       TextInput({ placeholder: '搜索学校', text: this.searchText })
         .width('92%')
         .height(44)
         .fontSize(15)
+        .placeholderColor($r('app.color.text_secondary'))
         .borderRadius(22)
-        .backgroundColor('#EFEFEF')
+        .backgroundColor($r('app.color.input_bg'))
         .padding({ left: 20, right: 20 })
         .margin({ top: 16, bottom: 8 })
         .onChange((value: string) => {
@@ -113,7 +114,7 @@ struct SchoolSelectPage {
                 Text(school.name)
                   .fontSize(16)
                   .fontWeight(FontWeight.Medium)
-                  .fontColor('#333333')
+                  .fontColor($r('app.color.text_primary'))
               }
               .layoutWeight(1)
               .alignItems(HorizontalAlign.Start)
@@ -122,22 +123,22 @@ struct SchoolSelectPage {
               if (school.supported) {
                 Text('支持导入')
                   .fontSize(11)
-                  .fontColor('#007DFF')
+                  .fontColor($r('app.color.accent'))
                   .padding({ left: 8, right: 8, top: 3, bottom: 3 })
-                  .backgroundColor('#E8F3FF')
+                  .backgroundColor($r('app.color.accent_bg'))
                   .borderRadius(10)
               } else {
                 Text('即将支持')
                   .fontSize(11)
-                  .fontColor('#999999')
+                  .fontColor($r('app.color.text_secondary'))
                   .padding({ left: 8, right: 8, top: 3, bottom: 3 })
-                  .backgroundColor('#F0F0F0')
+                  .backgroundColor($r('app.color.divider_color'))
                   .borderRadius(10)
               }
             }
             .width('100%')
             .padding(16)
-            .backgroundColor(Color.White)
+            .backgroundColor($r('app.color.card_bg'))
             .borderRadius(12)
             .onClick(() => {
               this.onSchoolClick(school);
@@ -147,16 +148,17 @@ struct SchoolSelectPage {
       }
       .width('92%')
       .layoutWeight(1)
+      .edgeEffect(EdgeEffect.Spring)
       .padding({ top: 8 })
 
       // 底部提示
       Text('更多学校陆续支持中，敬请期待')
         .fontSize(12)
-        .fontColor('#CCCCCC')
+        .fontColor($r('app.color.text_secondary'))
         .margin({ bottom: 24 })
     }
     .width('100%')
     .height('100%')
-    .backgroundColor('#F5F5F5')
+    .backgroundColor($r('app.color.page_bg'))
   }
 }

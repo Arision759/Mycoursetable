@@ -51,7 +51,7 @@ struct LoginImportPage {
 
       Text(`${this.schoolName}教务系统`)
         .fontSize(14)
-        .fontColor('#999999')
+        .fontColor($r('app.color.text_secondary'))
         .margin({ bottom: 48 })
 
       // 学号输入
@@ -60,8 +60,9 @@ struct LoginImportPage {
         .width('80%')
         .height(48)
         .fontSize(16)
+        .placeholderColor($r('app.color.text_secondary'))
         .borderRadius(8)
-        .backgroundColor('#F5F5F5')
+        .backgroundColor($r('app.color.page_bg'))
         .padding({ left: 16, right: 16 })
         .margin({ bottom: 16 })
         .onChange((value: string) => {
@@ -74,8 +75,9 @@ struct LoginImportPage {
         .width('80%')
         .height(48)
         .fontSize(16)
+        .placeholderColor($r('app.color.text_secondary'))
         .borderRadius(8)
-        .backgroundColor('#F5F5F5')
+        .backgroundColor($r('app.color.page_bg'))
         .padding({ left: 16, right: 16 })
         .margin({ bottom: 32 })
         .onChange((value: string) => {
@@ -88,8 +90,8 @@ struct LoginImportPage {
         .height(48)
         .fontSize(16)
         .fontWeight(FontWeight.Medium)
-        .backgroundColor('#007DFF')
-        .fontColor(Color.White)
+        .backgroundColor($r('app.color.accent'))
+        .fontColor($r('app.color.card_bg'))
         .borderRadius(24)
         .enabled(!this.isLoading)
         .opacity(this.isLoading ? 0.6 : 1.0)
@@ -101,7 +103,7 @@ struct LoginImportPage {
       if (this.statusText.length > 0) {
         Text(this.statusText)
           .fontSize(14)
-          .fontColor('#666666')
+          .fontColor($r('app.color.text_secondary'))
           .margin({ top: 24 })
       }
 
@@ -110,7 +112,7 @@ struct LoginImportPage {
         LoadingProgress()
           .width(36)
           .height(36)
-          .color('#007DFF')
+          .color($r('app.color.accent'))
           .margin({ top: 16 })
       }
 
@@ -118,7 +120,7 @@ struct LoginImportPage {
       if (this.errorText.length > 0) {
         Text(this.errorText)
           .fontSize(14)
-          .fontColor('#FF3B30')
+          .fontColor('#C62828')
           .margin({ top: 24 })
           .textAlign(TextAlign.Center)
       }
@@ -128,14 +130,14 @@ struct LoginImportPage {
 
       Text('首次使用需要登录教务系统导入课表')
         .fontSize(12)
-        .fontColor('#CCCCCC')
+        .fontColor($r('app.color.text_secondary'))
         .margin({ bottom: 40 })
     }
     .width('100%')
     .height('100%')
     .justifyContent(FlexAlign.Start)
     .alignItems(HorizontalAlign.Center)
-    .backgroundColor(Color.White)
+    .backgroundColor($r('app.color.card_bg'))
   }
 
   /**

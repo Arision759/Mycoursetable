@@ -191,7 +191,7 @@ struct SettingsPage {
         Button('←')
           .fontSize(20)
           .backgroundColor(Color.Transparent)
-          .fontColor('#333333')
+          .fontColor($r('app.color.text_primary'))
           .onClick(() => {
             router.back();
           })
@@ -205,7 +205,7 @@ struct SettingsPage {
         Button('保存')
           .fontSize(15)
           .backgroundColor(Color.Transparent)
-          .fontColor('#007DFF')
+          .fontColor($r('app.color.accent'))
           .onClick(() => {
             this.saveSettings();
           })
@@ -213,7 +213,7 @@ struct SettingsPage {
       .width('100%')
       .height(56)
       .padding({ left: 16, right: 16 })
-      .backgroundColor(Color.White)
+      .backgroundColor($r('app.color.card_bg'))
 
       if (this.isLoading) {
         Column() {
@@ -237,10 +237,10 @@ struct SettingsPage {
                 Row({ space: 4 }) {
                   Text(this.isTermExpanded ? '收起' : '展开')
                     .fontSize(12)
-                    .fontColor('#999999')
+        .fontColor($r('app.color.text_secondary'))
                   Text(this.isTermExpanded ? '▲' : '▼')
                     .fontSize(12)
-                    .fontColor('#999999')
+        .fontColor($r('app.color.text_secondary'))
                 }
               }
               .width('100%')
@@ -252,7 +252,7 @@ struct SettingsPage {
               if (this.isTermExpanded) {
                 Text('教务系统未提供学期信息，请手动选择当前学期')
                   .fontSize(12)
-                  .fontColor('#999999')
+                  .fontColor($r('app.color.text_secondary'))
 
                 TextPicker({ range: TERM_OPTIONS, selected: this.selectedTermIndex })
                   .onChange((value: string | string[], index: number | number[]) => {
@@ -263,12 +263,12 @@ struct SettingsPage {
               } else {
                 Text(`当前：${this.termName || '未选择'}`)
                   .fontSize(12)
-                  .fontColor('#999999')
+                  .fontColor($r('app.color.text_secondary'))
               }
             }
             .width('100%')
             .padding(16)
-            .backgroundColor(Color.White)
+            .backgroundColor($r('app.color.card_bg'))
             .borderRadius(12)
             .alignItems(HorizontalAlign.Start)
 
@@ -282,10 +282,10 @@ struct SettingsPage {
                 Row({ space: 4 }) {
                   Text(this.isStartDateExpanded ? '收起' : '展开')
                     .fontSize(12)
-                    .fontColor('#999999')
+        .fontColor($r('app.color.text_secondary'))
                   Text(this.isStartDateExpanded ? '▲' : '▼')
                     .fontSize(12)
-                    .fontColor('#999999')
+        .fontColor($r('app.color.text_secondary'))
                 }
               }
               .width('100%')
@@ -308,12 +308,12 @@ struct SettingsPage {
               } else {
                 Text(`当前：${this.startDateText}`)
                   .fontSize(12)
-                  .fontColor('#999999')
+                  .fontColor($r('app.color.text_secondary'))
               }
             }
             .width('100%')
             .padding(16)
-            .backgroundColor(Color.White)
+            .backgroundColor($r('app.color.card_bg'))
             .borderRadius(12)
             .alignItems(HorizontalAlign.Start)
 
@@ -327,7 +327,7 @@ struct SettingsPage {
 
                   Text('在桌面显示下节课提醒')
                     .fontSize(12)
-                    .fontColor('#999999')
+        .fontColor($r('app.color.text_secondary'))
                 }
                 .layoutWeight(1)
                 .alignItems(HorizontalAlign.Start)
@@ -342,11 +342,11 @@ struct SettingsPage {
               if (this.desktopReminderEnabled) {
                 Text('提前多长时间提醒（默认提前2小时）')
                   .fontSize(12)
-                  .fontColor('#999999')
+                  .fontColor($r('app.color.text_secondary'))
 
                 Text(`当前：${this.getDesktopReminderLabel()}`)
                   .fontSize(13)
-                  .fontColor('#333333')
+                  .fontColor($r('app.color.text_primary'))
 
                 TextPicker({ range: DESKTOP_REMINDER_LABELS, selected: this.desktopReminderSelectedIndex })
                   .onChange((value: string | string[], index: number | number[]) => {
@@ -359,26 +359,57 @@ struct SettingsPage {
             }
             .width('100%')
             .padding(16)
-            .backgroundColor(Color.White)
+            .backgroundColor($r('app.color.card_bg'))
+            .borderRadius(12)
+            .alignItems(HorizontalAlign.Start)
+
+            // 关于我们入口
+            Column({ space: 12 }) {
+              Row() {
+                Column({ space: 4 }) {
+                  Text('关于我们')
+                    .fontSize(15)
+                    .fontWeight(FontWeight.Medium)
+
+                  Text('应用信息、开发者与版本号')
+                    .fontSize(12)
+        .fontColor($r('app.color.text_secondary'))
+                }
+                .layoutWeight(1)
+                .alignItems(HorizontalAlign.Start)
+
+                Text('›')
+                  .fontSize(22)
+                  .fontColor($r('app.color.text_secondary'))
+              }
+              .width('100%')
+              .onClick(() => {
+                router.pushUrl({ url: 'pages/AboutPage' });
+              })
+            }
+            .width('100%')
+            .padding(16)
+            .backgroundColor($r('app.color.card_bg'))
             .borderRadius(12)
             .alignItems(HorizontalAlign.Start)
 
             // 说明
             Text('说明：开学日期为第1周的周一，用于计算当前周次和课表上方每天对应的日期。')
               .fontSize(12)
-              .fontColor('#999999')
+              .fontColor($r('app.color.text_secondary'))
               .padding({ left: 16, right: 16 })
           }
           .width('100%')
           .padding({ top: 16, bottom: 24 })
         }
         .scrollBar(BarState.Auto)
+        .edgeEffect(EdgeEffect.Spring)
         .width('100%')
         .layoutWeight(1)
       }
     }
     .width('100%')
     .height('100%')
-    .backgroundColor('#F5F5F5')
+    .backgroundColor($r('app.color.page_bg'))
   }
 }

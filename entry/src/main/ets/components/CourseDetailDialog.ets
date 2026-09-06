@@ -27,7 +27,7 @@ export struct CourseDetailDialog {
 
         Text(this.detail.courseCode)
           .fontSize(14)
-          .fontColor('#666666')
+          .fontColor($r('app.color.text_secondary'))
       }
       .width('100%')
       .alignItems(HorizontalAlign.Start)
@@ -100,7 +100,7 @@ export struct CourseDetailDialog {
         ForEach(this.detail.classrooms, (classroom: string) => {
           Text(classroom)
             .fontSize(14)
-            .fontColor('#666666')
+            .fontColor($r('app.color.text_secondary'))
             .padding({ left: 30 })
         })
       }
@@ -115,7 +115,7 @@ export struct CourseDetailDialog {
         })
     }
     .padding(20)
-    .backgroundColor(Color.White)
+    .backgroundColor($r('app.color.card_bg'))
     .borderRadius(16)
   }
 }

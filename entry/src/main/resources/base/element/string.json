@@ -2,15 +2,15 @@
   "string": [
     {
       "name": "module_desc",
-      "value": "长大课程表主模块"
+      "value": "我的课表主模块"
     },
     {
       "name": "EntryAbility_desc",
-      "value": "长大课程表"
+      "value": "我的课表"
     },
     {
       "name": "EntryAbility_label",
-      "value": "长大课程表"
+      "value": "我的课表"
     },
     {
       "name": "EntryFormAbility_desc",

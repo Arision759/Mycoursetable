@@ -1,7 +1,6 @@
 import { AbilityConstant, ConfigurationConstant, UIAbility, Want } from '@kit.AbilityKit';
 import { hilog } from '@kit.PerformanceAnalysisKit';
 import { window } from '@kit.ArkUI';
-import { PrivacyConsentManager } from '../service/PrivacyConsentManager';
 import { AppInitializer } from '../service/AppInitializer';
 
 const DOMAIN = 0x0000;
@@ -17,7 +16,7 @@ export default class EntryAbility extends UIAbility {
 
     hilog.info(DOMAIN, TAG, '%{public}s', 'Ability onCreate');
 
-    // 处理跳转参数；仅读取隐私“不再提醒”标记，业务数据仍延迟到授权后初始化。
+    // 处理跳转参数（如桌面卡片或通知跳转到指定页面）。
     this.handleWantParameters(want);
   }
 
@@ -47,17 +46,12 @@ export default class EntryAbility extends UIAbility {
   }
 
   private async loadInitialPage(windowStage: window.WindowStage): Promise<void> {
-    let page = 'pages/PrivacyPage';
+    const page = 'pages/WeekSchedulePage';
 
     try {
-      const shouldShowPrivacy = await PrivacyConsentManager.shouldShowDialog(this.context);
-      if (!shouldShowPrivacy) {
-        await AppInitializer.initialize(this.context);
-        page = 'pages/WeekSchedulePage';
-      }
+      await AppInitializer.initialize(this.context);
     } catch (err) {
-      hilog.error(DOMAIN, TAG, 'Failed to decide privacy page. Cause: %{public}s', JSON.stringify(err));
-      page = 'pages/PrivacyPage';
+      hilog.error(DOMAIN, TAG, 'Failed to initialize app. Cause: %{public}s', JSON.stringify(err));
     }
 
     windowStage.loadContent(page, (err) => {
