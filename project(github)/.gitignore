@@ -1,0 +1,46 @@
+# HarmonyOS 构建产物
+build/
+.hvigor/
+*/build/
+oh_modules/
+node_modules/
+.appanalyzer/
+
+# IDE 配置
+.idea/
+*.iml
+.vscode/
+*.swp
+*.swo
+*~
+
+# 系统文件
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# 日志文件
+*.log
+
+# 临时文件
+*.tmp
+*.temp
+.cache/
+
+# 用户配置（可能包含敏感信息）
+local.properties
+*.local.json
+
+# 签名文件
+*.p12
+
+# 临时调试文件
+_git_output*.txt
+_out*.txt
+_clean.txt
+*.jks
+*.keystore
+*.p12
+*.p7b
+*.cer
+KeyStore/

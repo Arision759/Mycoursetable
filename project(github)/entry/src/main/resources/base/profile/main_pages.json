@@ -1,0 +1,11 @@
+{
+  "src": [
+    "pages/Index",
+    "pages/WeekSchedulePage",
+    "pages/ImportPage",
+    "pages/LoginImportPage",
+    "pages/SettingsPage",
+    "pages/SchoolSelectPage",
+    "pages/AboutPage"
+  ]
+}
